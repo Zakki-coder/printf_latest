@@ -353,27 +353,26 @@ typedef union u_dbltoull
 void single_float()
 {
 	t_dbltoull data;
-	long double input = 7.99999067386341522478687693364918231964111328125;
+	double input = 7.99999067386341522478687693364918231964111328125;
 
 	/* This number tests for edge case on bankers rounding, if number would be 0.15 and bankers would be adding 0.05 instead of 0.1 then breaks.*/
 	data.u = 936902656;
 	printf("Expected: %.19f\n", data.d);
 	ft_printf("Yours:    %.19f\n", data.d);
-/*	ft_printf("DOUBLE: %lf\n", input);
-	printf("DOUBLE: %lf\n", input);
+	ft_printf("DOUBLE: %.19lf\n", input);
+	printf("DOUBLE: %.19lf\n", input);
 	ft_printf("DOUBLE: %#lf\n", input);
 	printf("DOUBLE: %#lf\n", input);
 	ft_printf("DOUBLE: %#.lf\n", input);
 	printf("DOUBLE: %#.lf\n", input);
 	ft_printf("DOUBLE: %.lf\n", input);
 	printf("DOUBLE: %.lf\n", input);
-	*/
 }
 
 void float_play()
 {
 	t_dbltoull data, data2;
-	float limit;
+	unsigned long long limit;
 	int fd1, fd2, stdout_bk;
 	char *file_expected, *file_yours, *file_diff;
 
@@ -383,8 +382,9 @@ void float_play()
 
 	/* Test values with unsigned range 936902656 - 1034147200 */
 	data.u = 527179339; //Smallest value to print 1 at ulp
+	data.d = 1.1;
 	data2 = data;
-	limit = 0.1; //Upper limit
+	limit = data.u + 1000; //Upper limit
 	fd1 = open(file_expected, O_RDWR | O_CREAT | O_TRUNC, 00777);	
 	fd2 = open(file_yours, O_RDWR | O_CREAT | O_TRUNC, 00777);	
 	if (fd1 < 0 || fd2 < 0)
@@ -401,9 +401,9 @@ void float_play()
 		printf("Dup fail\n");
 		return ;
 	}
-	while (data.d < limit)
+	while (data.u < limit)
 	{
-		printf("%.19f, ull: %llu\n", data.d, data.u);	
+		printf("%.18f, ull: %llu\n", data.d, data.u);	
 		fflush(stdout);
 		data.u++;
 	}
@@ -412,9 +412,9 @@ void float_play()
 	printf("Starting to generate your values\n");
 	fflush(stdout);
 	dup2(fd2, STDOUT_FILENO);
-	while (data2.d < limit)
+	while (data2.u < limit)
 	{
-		ft_printf("%.19f, ull: %llu\n", data2.d, data2.u);	
+		ft_printf("%.18f, ull: %llu\n", data2.d, data2.u);	
 		fflush(stdout);
 		data2.u++;
 	}
@@ -449,6 +449,14 @@ void test_str()
 	ft_printf("|%.-20s|\n", "KissaKoira");
 }
 
+void test_broken()
+{
+	t_dbltoull data;
+
+	data.u = 1066192077;
+	printf("Expected: %.19lf\n", data.d);
+	ft_printf("Yours:    %.19lf\n", data.d);
+}
 /* Anything excpet float with value 0 and precisionn zero prints no digits */
 int main(void)
 {
@@ -467,9 +475,10 @@ int main(void)
 //	test_percent();
 //	test_interesting();
 //	test_rounder();
-//	float_play();
 //	single_float();
 //	test_long_double();
-	test_str();
+//	test_str();
+//	test_broken();
+	float_play();
 	return (0);
 }

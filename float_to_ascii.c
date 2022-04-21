@@ -86,7 +86,7 @@ long double round_up_float(int precision, long double f)
 {
     long double add;
 
-    add = divide_one_with_ten_n(precision + 1);
+    add = divide_one_with_ten_n(precision); //Was originally precision + 1
     f += add;
     f -= add / 10;
     return (f);
