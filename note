@@ -1,0 +1,1 @@
+	Negative precision goes to default precision 6. Negative width is negative flag and abs width. Remember this when implementating the * test |%.-12|
