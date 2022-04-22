@@ -4,6 +4,8 @@ INC =	-I./		\
 		-I./libft/	\
 	
 SRC =	./ft_printf.c	\
+		./float_to_ascii.c	\
+		./put_string.c	\
 		./libft/*.c	\
 
 OBJ =	./*.o

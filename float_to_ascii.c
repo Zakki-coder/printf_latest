@@ -183,7 +183,7 @@ void create_output(t_fs *f_str, char *nb, unsigned int nb_len)
     unsigned int starts_with_zero;
 
     starts_with_zero = 0;
-    if (*nb == '0');
+    if (*nb == '0')
         starts_with_zero = 1;
     ft_bzero(out, f_str->width);
     ft_memset(out, ' ', f_str->width);

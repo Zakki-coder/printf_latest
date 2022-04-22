@@ -8,7 +8,7 @@ void put_string(t_fs *f_str)
     str = va_arg(f_str->argcs, const char *);
     if (str == 0)
     {
-        write(1, "(null)", 6);
+        f_str->return_n += write(1, "(null)", 6);
         ++f_str->str;
         return ;
     }
@@ -41,9 +41,9 @@ void put_character(t_fs *f_str)
 
     ch = (unsigned char)va_arg(f_str->argcs, int); 
     if (ch == 0)
-        f_str->return_n += (1, "\0", 1);
+        f_str->return_n += write(1, "\0", 1);
     else
-        f_str->return_n += (1, &ch, 1);
+        f_str->return_n += write(1, &ch, 1);
     ++f_str->str;
 }
 
@@ -51,7 +51,7 @@ void put_pointer_address(t_fs *f_str)
 {
     unsigned long long address;
 
-    address = va_arg(f_str->argcs, void *);
+    address = *(int *)va_arg(f_str->argcs, void *);
     f_str->flags = f_str->flags | HASH;
     if (address == 0)
     {
