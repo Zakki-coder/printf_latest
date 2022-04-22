@@ -140,8 +140,16 @@ void how_convers()
 
 void test_d_i()
 {
-	printf("Input 3 |%0.4d|\n", 3);
-	ft_printf("Input 3 |%0.4d|\n", 3);
+//	printf("Input 3 |%0.4d|\n", 3);
+//	ft_printf("Input 3 |%0.4d|\n", 3);
+	printf("% 10.5d\n", 4242);
+	ft_printf("% 10.5d\n", 4242);
+	printf("% 10.11d\n", 4242);
+	ft_printf("% 10.11d\n", 4242);
+	printf("@moulitest: %.10d\n", -42);
+	ft_printf("@moulitest: %.10d\n", -42);
+
+
 }
 
 void test_x()
@@ -158,8 +166,10 @@ void test_x()
 //	printf("|%+x|\n", UINT_MAX);
 //	ft_printf("|%+x|\n", UINT_MAX);
 //	ft_printf("|%#6.7X|\n", 3);
-	ft_printf("|%-4x|\n", 0);
+//	ft_printf("|%-4x|\n", 0);
 //	res2 = hexa_len(input);	
+	printf("%jx\n", 4294967295);
+	ft_printf("%jx\n", 4294967295);
 }
 
 void wtf(void)
@@ -465,12 +475,20 @@ void test_str()
 
 void test_char()
 {
-	printf("%c\n", 'x');
-	ft_printf("%c\n", 'x');
-	printf("%c\n", NULL);
-	ft_printf("%c\n", NULL);
-	printf("%c\n", 0);
-	ft_printf("%c\n", 0);
+//	printf("%c\n", 'x');
+//	ft_printf("%c\n", 'x');
+//	printf("%c\n", NULL);
+//	ft_printf("%c\n", NULL);
+//	printf("%c\n", 0);
+//	ft_printf("%c\n", 0);
+	printf("|%5c|\n", 'x');
+	ft_printf("|%5c|\n", 'x');
+	printf("|%05c|\n", 'x');
+	ft_printf("|%05c|\n", 'x');
+	printf("|%-5c|\n", 'x');
+	ft_printf("|%-5c|\n", 'x');
+	printf("|%-05c|\n", 'x');
+	ft_printf("|%-05c|\n", 'x');
 }
 
 void test_ptr()
@@ -483,9 +501,14 @@ void test_ptr()
 	nb = 5;
 	printf("|%p| and |%p| and |%p|\n", ptr, nb, cptr);
 	ft_printf("|%p| and |%p| and |%p|\n", ptr, nb, cptr);
-	ptr = nb;
+	ptr = &nb;
 	printf("|%p| and |%p| and |%p|\n", ptr, nb, cptr);
 	ft_printf("|%p| and |%p| and |%p|\n", ptr, nb, cptr);
+}
+
+void test_minus()
+{
+	ft_printf("@main_ftprintf: %###-#0000 33...12..#0+0d", 256);
 }
 /* Anything excpet float with value 0 and precisionn zero prints no digits */
 int main(void)
@@ -510,6 +533,7 @@ int main(void)
 //	test_str();
 //	float_play();
 //	test_char();
-	test_ptr();
+//	test_ptr();
+	test_minus();
 	return (0);
 }

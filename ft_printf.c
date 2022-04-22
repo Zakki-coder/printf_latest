@@ -282,7 +282,7 @@ void set_prefix(t_fs *f_str, char *out, unsigned int nb_len)
 	if ((f & MINUS) || (f & ZERO))
 		*out = prefix;	
 	else
-		*(out + f_str->width - nb_len - 1) = prefix;
+		*(out + f_str->width - f_str->precision - 1/*nb_len - 1*/) = prefix; // nb_len - 1 changed to - precision
 }
 
 char *not_itoa(char *out, unsigned long long nb, int len, int diff)
@@ -355,13 +355,13 @@ void itodiutoa(t_fs *f_str, long long ll)
 			diff = 1;
 		else
 			diff = 0;
-		if (f_str->precision - len > 0)
+		if (f_str->precision - len > 0 && !(f_str->flags & MINUS))
 		{
 			ft_memset(out + diff, '0', f_str->precision - len);
 			diff += f_str->precision - len;
 		}
 	}
-	if (!(f_str->flags & MINUS) && f_str->is_precision)
+	if (!(f_str->flags & MINUS) && f_str->is_precision) //ON linux we generate zeroes with formula precision - nb len, even if no zero flag. On mac not?
 		ft_memset(out + (f_str->width - f_str->precision), '0', f_str->precision);
 	else if (!(f_str->flags & MINUS) && f_str->flags & ZERO)
 		ft_memset(out, '0', f_str->width);
@@ -843,6 +843,20 @@ void no_conversion(t_fs *f_str)
 		print_spaces(f_str->width);
 }
 
+int search_conversion(t_fs *f_str)
+{
+	char *conversions = "diouxXfcsp";
+	int i;
+
+	while (conversions[i] != '\0')
+	{
+		if (ft_strchr(f_str->str, conversions[i]))
+			return (1);
+		++i;
+	}
+	return (0);
+}
+
 void parser(t_fs *f_str)
 {
 	const char **str;
@@ -853,7 +867,8 @@ void parser(t_fs *f_str)
 	//Traverse and print fs until %, with print_chars then send to get_flags
 	if(print_chars(f_str) == -1)
 		return ;
-		while(is_correct_format_str(**str) && **str != '\0')
+	if (search_conversion(f_str))
+		while(!is_conversion(**str) && **str != '\0')
 		{
 			++(*str);
 			get_flags(f_str);

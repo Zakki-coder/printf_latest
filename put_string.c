@@ -39,11 +39,17 @@ void put_character(t_fs *f_str)
 {
     unsigned char ch;
 
+    if (f_str->width >= 1)
+        f_str->width -= 1;
+    if (!(f_str->flags & MINUS))
+        f_str->return_n += print_spaces(f_str->width);
     ch = (unsigned char)va_arg(f_str->argcs, int); 
     if (ch == 0)
         f_str->return_n += write(1, "\0", 1);
     else
         f_str->return_n += write(1, &ch, 1);
+    if (f_str->flags & MINUS)
+        f_str->return_n += print_spaces(f_str->width);
     ++f_str->str;
 }
 
