@@ -48,7 +48,11 @@ typedef struct s_format_string
 	int			percent_flag;
 }				t_fs;
 
+void put_character(t_fs *f_str);
+void itoxa(t_fs *f_str, unsigned long long ull);
+void put_pointer_address(t_fs *f_str);
 unsigned long long print_spaces(int len);
+unsigned long long  print_zeroes(int len);
 void put_string(t_fs *f_str);
 void float_to_ascii(t_fs *f_str);
 int has_prefix(t_fs *f_str);

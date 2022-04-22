@@ -552,16 +552,19 @@ void put_hexa_prefix(t_fs *fs)
 	char l_case;
 
 	l_case = *fs->str;
-	if (l_case == 'X' || l_case == 'x')
-	{
+//	if (l_case == 'X' || l_case == 'x')
+//	{
 		if (l_case == 'X')
 			ft_putstr("0X");
-		if (l_case == 'x')
+		else
 			ft_putstr("0x");
+//		if (l_case == 'x')
+//			ft_putstr("0x");
 		fs->return_n += 2;
-	}
+//	}
 }
 
+/* TODO: Check hexa and octa for overflow with huge width */
 void hexa_print(t_fs *f_str, unsigned long long ull)
 {
 	char s[100];
@@ -577,7 +580,7 @@ void hexa_print(t_fs *f_str, unsigned long long ull)
 	}
 	if (*f_str->str == 'X')
 		casing = '@';
-	else if (*f_str->str == 'x')
+	else
 		casing = '`';
 	while(ull > 0)
 	{
@@ -790,7 +793,7 @@ void parse_conversion(t_fs *f_str)
 	//make a function which gets the argument from stack
 	//Conver the value to octal-, hexa-, integer- or float string
 	//One function to return long long and one to return long double
-	if (*f_str->str != 'f' && *f_str->str != '%' && *f_str->str != 's' && *f_str->str != 'c')
+	if (*f_str->str != 'f' && *f_str->str != '%' && *f_str->str != 's' && *f_str->str != 'c' && *f_str->str != 'p')
 	{
 		if (*f_str->str != 'd' && *f_str->str != 'i')
 		{
@@ -810,9 +813,34 @@ void parse_conversion(t_fs *f_str)
 		put_percent(f_str);
 	else if (*f_str->str == 's')
 		put_string(f_str);
+	else if (*f_str->str == 'c')
+		put_character(f_str);
+	else if (*f_str->str == 'p')
+		put_pointer_address(f_str);
 	else
 		float_to_ascii(f_str);
 	format_fs(f_str);
+}
+
+int is_flag(char c)
+{
+	return (c == '#' || c == '-' || c == '0' || c == '+' || c == ' ');
+}
+
+int is_correct_format_str(char c)
+{
+	return (ft_isdigit(c) /*|| is_conversion(c)*/ || is_modifier(c) || is_flag(c)
+			|| c == '%');
+}
+
+void no_conversion(t_fs *f_str)
+{
+	if (f_str->width >= 1)
+		f_str->width -= 1;
+	if (f_str->flags & ZERO)
+		print_zeroes(f_str->width);
+	else
+		print_spaces(f_str->width);
 }
 
 void parser(t_fs *f_str)
@@ -825,7 +853,7 @@ void parser(t_fs *f_str)
 	//Traverse and print fs until %, with print_chars then send to get_flags
 	if(print_chars(f_str) == -1)
 		return ;
-		while(!is_conversion(**str) && **str != '\0')
+		while(is_correct_format_str(**str) && **str != '\0')
 		{
 			++(*str);
 			get_flags(f_str);
@@ -839,6 +867,8 @@ void parser(t_fs *f_str)
 		//Print the first conversion out and reset struct
 		if (is_conversion(**str) || **str == '%')
 			parse_conversion(f_str);
+		else
+			no_conversion(f_str);
 	}
 	//If we find \0 before conversion, nothing gets printed int the '%'-'\0' range, is it correcto?
 }

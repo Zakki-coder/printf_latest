@@ -447,15 +447,45 @@ void test_str()
 {
 	printf("|%.-20s|\n", "KissaKoira");
 	ft_printf("|%.-20s|\n", "KissaKoira");
+	printf("|%-020s|\n", "KissaKoira");
+	ft_printf("|%-020s|\n", "KissaKoira");
+	printf("|%0|\n", "KissaKoira");
+	ft_printf("|%0|\n", "KissaKoira");
+	printf("|%01|\n", "KissaKoira");
+	ft_printf("|%01|\n", "KissaKoira");
+	printf("|%20|\n", "KissaKoira");
+	ft_printf("|%20|\n", "KissaKoira");
+	printf("|%|\n", "KissaKoira");
+	ft_printf("|%|\n", "KissaKoira");
+	printf("|%1|\n", "KissaKoira");
+	ft_printf("|%1|\n", "KissaKoira");
+	printf("|%s|\n", NULL);
+	ft_printf("|%s|\n", NULL);
 }
 
-void test_broken()
+void test_char()
 {
-	t_dbltoull data;
+	printf("%c\n", 'x');
+	ft_printf("%c\n", 'x');
+	printf("%c\n", NULL);
+	ft_printf("%c\n", NULL);
+	printf("%c\n", 0);
+	ft_printf("%c\n", 0);
+}
 
-	data.u = 1066192077;
-	printf("Expected: %.19lf\n", data.d);
-	ft_printf("Yours:    %.19lf\n", data.d);
+void test_ptr()
+{
+	int *ptr;
+	char *cptr;
+	int nb;
+
+	cptr = "ASDFFG";
+	nb = 5;
+	printf("|%p| and |%p| and |%p|\n", ptr, nb, cptr);
+	ft_printf("|%p| and |%p| and |%p|\n", ptr, nb, cptr);
+	ptr = nb;
+	printf("|%p| and |%p| and |%p|\n", ptr, nb, cptr);
+	ft_printf("|%p| and |%p| and |%p|\n", ptr, nb, cptr);
 }
 /* Anything excpet float with value 0 and precisionn zero prints no digits */
 int main(void)
@@ -478,7 +508,8 @@ int main(void)
 //	single_float();
 //	test_long_double();
 //	test_str();
-//	test_broken();
-	float_play();
+//	float_play();
+//	test_char();
+	test_ptr();
 	return (0);
 }
