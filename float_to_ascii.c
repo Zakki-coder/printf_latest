@@ -1,4 +1,4 @@
-#include "ft_printf.h"
+#include "includes/ft_printf.h"
 
 /* TODO: What should I do when LDBL is not enough? */
 long double ten_raised_to_n(unsigned int n)
@@ -247,8 +247,8 @@ void float_to_ascii(t_fs *f_str)
 {
     long double f;
 
-    if (f_str->flags & LDBL)
-        /*f = va_arg(f_str->argcs, long double)*/;
+    if (f_str->modifier & LDBL)
+        f = (long double)va_arg(f_str->argcs, long double);
     else 
         f = (long double)va_arg(f_str->argcs, double);
     /*Check negativity */

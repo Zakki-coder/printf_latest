@@ -366,17 +366,21 @@ void single_float()
 	double input = 7.99999067386341522478687693364918231964111328125;
 
 	/* This number tests for edge case on bankers rounding, if number would be 0.15 and bankers would be adding 0.05 instead of 0.1 then breaks.*/
-	data.u = 936902656;
-	printf("Expected: %.19f\n", data.d);
-	ft_printf("Yours:    %.19f\n", data.d);
-	ft_printf("DOUBLE: %.19lf\n", input);
-	printf("DOUBLE: %.19lf\n", input);
-	ft_printf("DOUBLE: %#lf\n", input);
-	printf("DOUBLE: %#lf\n", input);
-	ft_printf("DOUBLE: %#.lf\n", input);
-	printf("DOUBLE: %#.lf\n", input);
-	ft_printf("DOUBLE: %.lf\n", input);
-	printf("DOUBLE: %.lf\n", input);
+//	data.u = 936902656;
+//	printf("Expected: %.19f\n", data.d);
+//	ft_printf("Yours:    %.19f\n", data.d);
+//	ft_printf("DOUBLE: %.19lf\n", input);
+//	printf("DOUBLE: %.19lf\n", input);
+//	ft_printf("DOUBLE: %#lf\n", input);
+//	printf("DOUBLE: %#lf\n", input);
+//	ft_printf("DOUBLE: %#.lf\n", input);
+//	printf("DOUBLE: %#.lf\n", input);
+//	ft_printf("DOUBLE: %.lf\n", input);
+//	printf("DOUBLE: %.lf\n", input);
+//	printf("{%f}{%lf}{%Lf}\n", 1.42, 1.42, 1.42l);
+//	ft_printf("{%f}{%lf}{%Lf}\n", 1.42, 1.42, 1.42l);
+//	printf("{%Lf}\n", 1.42l);
+//	ft_printf("{%Lf}\n", 1.42l);
 }
 
 void float_play()
@@ -504,6 +508,10 @@ void test_ptr()
 	ptr = &nb;
 	printf("|%p| and |%p| and |%p|\n", ptr, nb, cptr);
 	ft_printf("|%p| and |%p| and |%p|\n", ptr, nb, cptr);
+	printf("%.0p, %.p\n", 0, 0);
+	ft_printf("%.0p, %.p\n", 0, 0);
+    printf("%p\n", &nb);
+    ft_printf("%p\n", &nb);
 }
 
 void test_minus()
@@ -533,7 +541,7 @@ int main(void)
 //	test_str();
 //	float_play();
 //	test_char();
-//	test_ptr();
-	test_minus();
+	test_ptr();
+//	test_minus();
 	return (0);
 }

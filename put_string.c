@@ -1,4 +1,4 @@
-#include "ft_printf.h"
+#include "includes/ft_printf.h"
 
 void put_string(t_fs *f_str)
 {
@@ -56,8 +56,16 @@ void put_character(t_fs *f_str)
 void put_pointer_address(t_fs *f_str)
 {
     unsigned long long address;
+    void *void_argument;
 
-    address = *(int *)va_arg(f_str->argcs, void *);
+    void_argument = va_arg(f_str->argcs, void *);
+    if (void_argument == NULL)
+    {
+        f_str->nb_len += write(1, "(nil)", 5);
+        ++f_str->str;
+        return ;
+    }
+    address = (unsigned long long)void_argument;
     f_str->flags = f_str->flags | HASH;
     if (address == 0)
     {

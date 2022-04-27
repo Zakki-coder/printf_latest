@@ -6,14 +6,14 @@
 /*   By: jniemine <jniemine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/14 15:15:00 by jniemine          #+#    #+#             */
-/*   Updated: 2022/04/12 17:10:02 by jniemine         ###   ########.fr       */
+/*   Updated: 2022/04/27 14:40:03 by jniemine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef FT_PRINTF_H
 # define FT_PRINTF_H
 
-# include "libft.h"
+# include "../libft/libft.h" //REmove filepath
 # include <stdarg.h>
 # include "unistd.h"
 # include <stdlib.h>

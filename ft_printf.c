@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf.h"
+#include "includes/ft_printf.h"
 
 int has_prefix(t_fs *f_str);
 
@@ -848,6 +848,7 @@ int search_conversion(t_fs *f_str)
 	char *conversions = "diouxXfcsp";
 	int i;
 
+	i = 0;
 	while (conversions[i] != '\0')
 	{
 		if (ft_strchr(f_str->str, conversions[i]))
@@ -868,7 +869,7 @@ void parser(t_fs *f_str)
 	if(print_chars(f_str) == -1)
 		return ;
 	if (search_conversion(f_str))
-		while(!is_conversion(**str) && **str != '\0')
+		while((!is_conversion(**str) || **str == '%') && **str != '\0')
 		{
 			++(*str);
 			get_flags(f_str);

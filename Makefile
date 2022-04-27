@@ -1,6 +1,6 @@
 NAME = libftprintf.a
 
-INC =	-I./		\
+INC =	-I./includes/		\
 		-I./libft/	\
 	
 SRC =	./ft_printf.c	\

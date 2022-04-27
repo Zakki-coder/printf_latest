@@ -1,0 +1,12 @@
+moro mita kuuluu						moro mita kuuluu
+moro mita kuuluu ?					      |	moro mita kuuluu %s
+moro  mita SInulle kuuluu				      |	moro  mita %s %s
+1 2 3 4 5 6 7 8 9 10 11 12 13				      |	1 2 3 4 5 %s %s %s %s %s %s %s %s
+? !								? !
+1 2 4 5							      |	1 %d %d %d
+-1 -2 -4 -5						      |	-1 %d %d %d
+0 0 0 0							      |	0 %d %d %d
+2147483647 2147483647 -2147483648 -2147483648		      |	2147483647 %d %d %d
+1 2 2 2							      |	1 %d %d %d
+1 2 2 2 4 2 222222 4444 4 10 -123123123 1		      |	1 %d %d %d %d %d %d %d %d %d %d %d
+							      >	0x7fcc 
