@@ -793,6 +793,8 @@ void parse_conversion(t_fs *f_str)
 	//make a function which gets the argument from stack
 	//Conver the value to octal-, hexa-, integer- or float string
 	//One function to return long long and one to return long double
+	/* TODO get rid of get_argument and function dispatcher 
+		You can still use cast_to_modifier */
 	if (*f_str->str != 'f' && *f_str->str != '%' && *f_str->str != 's' && *f_str->str != 'c' && *f_str->str != 'p')
 	{
 		if (*f_str->str != 'd' && *f_str->str != 'i')

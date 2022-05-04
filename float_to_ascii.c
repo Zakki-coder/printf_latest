@@ -36,22 +36,26 @@ void normalizer(int *precision, long double *f)
     *precision += decimal_place;
 }
 
+void set_precision_for_rounding_dir(t_fs *f_str, int *precision)
+{
+    if (f_str->is_precision)
+        *precision = f_str->precision;
+    else
+    {
+        f_str->is_precision = 1;
+        f_str->precision = 6;
+        *precision += f_str->precision;
+    }
+}
+
 int rounding_direction(t_fs *f_str, long double f, int *for_bankers)
 {
     int precision;
     long double exp;
     
-    /* Normalize the number always calculate the size of denominator seperately */
+    set_precision_for_rounding_dir(f_str, &precision);
     normalizer(&precision, &f);
     exp = ten_raised_to_n(f_str->precision); 
-    if (f_str->is_precision)
-        precision = f_str->precision;
-    else
-    {
-        f_str->is_precision = 1;
-        f_str->precision = 6;
-        precision += f_str->precision;
-    }
     while (precision) 
     {
         f -= (int)f;
@@ -60,7 +64,6 @@ int rounding_direction(t_fs *f_str, long double f, int *for_bankers)
             *for_bankers = (int)f;
         --precision;
     }
-    /* Delete first digit one more time */
     f -= (int)f;
     if (f < 0.5)
         return (-1);
@@ -179,12 +182,15 @@ void fractional_part(t_fs *f_str, long double *f, char *nb, int *i)
 //Caller needs to take care that width is at least nb_len
 void create_output(t_fs *f_str, char *nb, unsigned int nb_len)
 {
-    char out[f_str->width];
-    unsigned int starts_with_zero;
+    char            *out;
+    unsigned int    starts_with_zero;
 
     starts_with_zero = 0;
     if (*nb == '0')
         starts_with_zero = 1;
+    out = ft_memalloc(sizeof(char) * f_str->width);
+    if (out == NULL)
+        exit(-1);
     ft_bzero(out, f_str->width);
     ft_memset(out, ' ', f_str->width);
     if (!(f_str->flags & MINUS))
@@ -202,8 +208,11 @@ void create_output(t_fs *f_str, char *nb, unsigned int nb_len)
 void print_float(t_fs *f_str, long double f)
 {
     int i;
-    char nb[whole_part_len(f) + f_str->precision + has_prefix(f_str) + 2]; //Size of array is len of whole part and precision, +2 is for sign and dot
+    char *nb;
 
+    nb = ft_memalloc(whole_part_len(f) + f_str->precision + has_prefix(f_str) + 2); //Size of array is len of whole part and precision, +2 is for sign and dot
+    if (nb == NULL)
+        exit (-1);
     ft_bzero(nb, whole_part_len(f) + f_str->precision + has_prefix(f_str) + 2);
     f_str->nb_len = whole_part_len(f) + f_str->precision; //One for dot
     i = 0;

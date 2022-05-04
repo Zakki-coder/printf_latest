@@ -479,20 +479,24 @@ void test_str()
 
 void test_char()
 {
+	int res1, res2;
 //	printf("%c\n", 'x');
 //	ft_printf("%c\n", 'x');
 //	printf("%c\n", NULL);
 //	ft_printf("%c\n", NULL);
 //	printf("%c\n", 0);
 //	ft_printf("%c\n", 0);
-	printf("|%5c|\n", 'x');
-	ft_printf("|%5c|\n", 'x');
-	printf("|%05c|\n", 'x');
-	ft_printf("|%05c|\n", 'x');
-	printf("|%-5c|\n", 'x');
-	ft_printf("|%-5c|\n", 'x');
-	printf("|%-05c|\n", 'x');
-	ft_printf("|%-05c|\n", 'x');
+//	printf("|%5c|\n", 'x');
+//	ft_printf("|%5c|\n", 'x');
+//	printf("|%05c|\n", 'x');
+//	ft_printf("|%05c|\n", 'x');
+//	printf("|%-5c|\n", 'x');
+//	ft_printf("|%-5c|\n", 'x');
+//	printf("|%-05c|\n", 'x');
+//	ft_printf("|%-05c|\n", 'x');
+	res1 = printf("|%3c|\n", 0);
+	res2 = ft_printf("|%3c|\n", 0);
+	printf("You: %d Expected: %d\n", res1, res2);
 }
 
 void test_ptr()
@@ -540,8 +544,8 @@ int main(void)
 //	test_long_double();
 //	test_str();
 //	float_play();
-//	test_char();
-	test_ptr();
+	test_char();
+//	test_ptr();
 //	test_minus();
 	return (0);
 }
