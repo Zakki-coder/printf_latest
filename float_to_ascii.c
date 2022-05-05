@@ -160,8 +160,7 @@ void whole_part(t_fs *f_str, long double *f, char *nb, int *i)
 void fractional_part(t_fs *f_str, long double *f, char *nb, int *i)
 {
     int precision;
-    unsigned int digit;
-    long double exp;
+    unsigned long long digit;
 
     precision = f_str->precision;
     while (precision > 0)
@@ -259,7 +258,7 @@ void float_to_ascii(t_fs *f_str)
     if (f_str->modifier & LDBL)
         f = (long double)va_arg(f_str->argcs, long double);
     else 
-        f = (long double)va_arg(f_str->argcs, double);
+        f = va_arg(f_str->argcs, double);
     /*Check negativity */
     if (1 / f < 0)
     {

@@ -36,7 +36,7 @@ typedef struct s_format_string
 {
 	const char	*str;
 	va_list		argcs;
-	unsigned long long return_n;
+	unsigned long long print_len;
 	unsigned int		nb_len;
 	int			flags;
 	int			width;
@@ -49,7 +49,7 @@ typedef struct s_format_string
 }				t_fs;
 
 void put_character(t_fs *f_str);
-void itoxa(t_fs *f_str, unsigned long long ull);
+void itoxa(t_fs *f_str, long long nb);
 void put_pointer_address(t_fs *f_str);
 unsigned long long print_spaces(int len);
 unsigned long long  print_zeroes(int len);
@@ -57,9 +57,10 @@ void put_string(t_fs *f_str);
 void float_to_ascii(t_fs *f_str);
 int has_prefix(t_fs *f_str);
 void set_prefix(t_fs *f_str, char *out, unsigned int nb_len);
+unsigned long long cast_to_modifier_u(t_fs *f_str, unsigned long long ll);
 long double divide_one_with_ten_n(int precision); //DEBUGGIN
 void	print_octal(t_fs *f_str, unsigned long long ull);
-unsigned int hexa_len(unsigned long long ull); //FOR DEBUG
+unsigned int hexa_len(t_fs *f_str, unsigned long long ull); //FOR DEBUG
 void	abs_putnbr(unsigned long long n);		//FOR DEBUG
 unsigned long long	convert_to_octal(unsigned long long ull); //FOR DEBUG
 char	*absolute_itoa(long long ll, int *n); //FOR DEBUG

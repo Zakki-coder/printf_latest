@@ -142,14 +142,14 @@ void test_d_i()
 {
 //	printf("Input 3 |%0.4d|\n", 3);
 //	ft_printf("Input 3 |%0.4d|\n", 3);
-	printf("% 10.5d\n", 4242);
-	ft_printf("% 10.5d\n", 4242);
-	printf("% 10.11d\n", 4242);
-	ft_printf("% 10.11d\n", 4242);
-	printf("@moulitest: %.10d\n", -42);
-	ft_printf("@moulitest: %.10d\n", -42);
-
-
+	//printf("% 10.5d\n", 4242);
+	//ft_printf("% 10.5d\n", 4242);
+	//printf("% 10.11d\n", 4242);
+	//ft_printf("% 10.11d\n", 4242);
+	//printf("@moulitest: %.10d\n", -42);
+	//ft_printf("@moulitest: %.10d\n", -42);
+	printf("%-10.5d\n", 4242);
+	ft_printf("%-10.5d\n", 4242);
 }
 
 void test_x()
@@ -168,8 +168,12 @@ void test_x()
 //	ft_printf("|%#6.7X|\n", 3);
 //	ft_printf("|%-4x|\n", 0);
 //	res2 = hexa_len(input);	
-	printf("%jx\n", 4294967295);
-	ft_printf("%jx\n", 4294967295);
+//	printf("Real: %x\n", 4294967296);
+//	ft_printf("Not real: %x\n", 4294967296);
+//	printf("%ll#x\n", 9223372036854775807);
+//	ft_printf("%ll#x\n", 9223372036854775807);
+	printf("|%.4x|\n", 42);
+	ft_printf("|%.4x|\n", 42);
 }
 
 void wtf(void)
@@ -207,10 +211,14 @@ void test_print_octal()
 {
 	int d = 0;
 
-//	printf("Correct Precision 0: |%4.2o|\n", 0); 
-//	printf("Correct Precision 0: |%#4.o|\n", 0); 
-//	ft_printf("Correct Precision 0: |%4.o|\n", 3); 
-//	ft_printf("Input   : Argument is UINT_MAX: |%+ o|\n", UINT_MAX);
+	printf("|%15.4o|\n", 42);
+	ft_printf("|%15.4o|\n", 42);
+	printf("|%15.4o|\n", 0);
+	ft_printf("|%15.4o|\n", 0);
+	printf("|%.4o|\n", 424242);
+	ft_printf("|%.4o|\n", 424242);
+	printf("|%15.4o|\n", 424242);
+	ft_printf("|%15.4o|\n", 424242);
 	//If precision larger than width and number then add zeroes to front
 }
 
@@ -220,15 +228,20 @@ void test_percent()
 	int d = 0;
 	int res, res2;
 
-	res = printf("%%%%%%\n");
-	res2 = ft_printf("%%%%%%\n");
-	printf("correct: %d yours: %d\n", res, res2);	
-	res = printf("%%\n");
-	res2 = ft_printf("%%\n");
-	printf("correct: %d yours: %d\n", res, res2);	
-	res = printf("%%%5d\n", 3);
-	res2 = ft_printf("%%%5d\n", 3);
-	printf("correct: %d yours: %d\n", res, res2);	
+//	res = printf("%%%%%%\n");
+	//res2 = ft_printf("%%%%%%\n");
+	//printf("correct: %d yours: %d\n", res, res2);	
+	//res = printf("%%\n");
+	//res2 = ft_printf("%%\n");
+	//printf("correct: %d yours: %d\n", res, res2);	
+	//res = printf("%%%5d\n", 3);
+	//res2 = ft_printf("%%%5d\n", 3);
+	//printf("correct: %d yours: %d\n", res, res2);	
+	printf("%5%\n");
+	ft_printf("%5%\n");
+	printf("%-5%\n");
+	ft_printf("%-5%\n");
+
 }
 
 void test_interesting()
@@ -381,6 +394,11 @@ void single_float()
 //	ft_printf("{%f}{%lf}{%Lf}\n", 1.42, 1.42, 1.42l);
 //	printf("{%Lf}\n", 1.42l);
 //	ft_printf("{%Lf}\n", 1.42l);
+//	printf("{%f}{%lf}{%Lf}\n", 1.42, 1.42, 1.42l);
+//	ft_printf("{%f}{%lf}{%Lf}\n", 1.42, 1.42, 1.42l);
+	ft_printf("{%f}\n", 1.42);
+	ft_printf("{%lf}\n", 1.42);
+	ft_printf("{%Lf}\n", 1.42l);
 }
 
 void float_play()
@@ -494,8 +512,11 @@ void test_char()
 //	ft_printf("|%-5c|\n", 'x');
 //	printf("|%-05c|\n", 'x');
 //	ft_printf("|%-05c|\n", 'x');
-	res1 = printf("|%3c|\n", 0);
-	res2 = ft_printf("|%3c|\n", 0);
+//	res1 = printf("|%3c|\n", 0);
+//	res2 = ft_printf("|%3c|\n", 0);
+//	printf("You: %d Expected: %d\n", res1, res2);
+	res1 = printf("%05c\n", 42);
+	res2 = ft_printf("%05c\n", 42);
 	printf("You: %d Expected: %d\n", res1, res2);
 }
 
@@ -504,23 +525,50 @@ void test_ptr()
 	int *ptr;
 	char *cptr;
 	int nb;
+	int res1, res2;
 
-	cptr = "ASDFFG";
-	nb = 5;
-	printf("|%p| and |%p| and |%p|\n", ptr, nb, cptr);
-	ft_printf("|%p| and |%p| and |%p|\n", ptr, nb, cptr);
-	ptr = &nb;
-	printf("|%p| and |%p| and |%p|\n", ptr, nb, cptr);
-	ft_printf("|%p| and |%p| and |%p|\n", ptr, nb, cptr);
-	printf("%.0p, %.p\n", 0, 0);
-	ft_printf("%.0p, %.p\n", 0, 0);
-    printf("%p\n", &nb);
-    ft_printf("%p\n", &nb);
+//	res1 = printf("%p\n", ptr);
+//	res2 = ft_printf("%p\n", ptr);
+//	cptr = "ASDFFG";
+//	nb = 5;
+//	printf("|%p| and |%p| and |%p|\n", ptr, nb, cptr);
+//	ft_printf("|%p| and |%p| and |%p|\n", ptr, nb, cptr);
+//	ptr = &nb;
+//	printf("|%p| and |%p| and |%p|\n", ptr, nb, cptr);
+//	ft_printf("|%p| and |%p| and |%p|\n", ptr, nb, cptr);
+//	printf("%.0p, %.p\n", 0, 0);
+//	ft_printf("%.0p, %.p\n", 0, 0);
+//  	printf("%p\n", &nb);
+//  	ft_printf("%p\n", &nb);
+//	res1 = printf("%.0p, %.p\n", 0, 0);
+//	res2 = ft_printf("%.0p, %.p\n", 0, 0);
+	res1 = printf("%.5p\n", 0);
+	res2 = ft_printf("%.5p\n", 0);
+	printf("Expected %d, Yours: %d\n", res1, res2);
+	res1 = printf("|%9.2p|\n", 1234);
+	res2 = ft_printf("|%9.2p|\n", 1234);
+	printf("Expected %d, Yours: %d\n", res1, res2);
+	res1 = printf("|%2.9p|\n", 1234);
+	res2 = ft_printf("|%2.9p|\n", 1234);
+	printf("Expected %d, Yours: %d\n", res1, res2);
 }
 
 void test_minus()
 {
 	ft_printf("@main_ftprintf: %###-#0000 33...12..#0+0d", 256);
+}
+
+void test_unsigned()
+{
+//	printf("%U\n", 4294967295);
+	//ft_printf("%U\n", 4294967295);
+//	printf("%U\n", 4294967296);
+	//ft_printf("%U\n", 4294967296);
+	printf("@main_ftprintf: %###-#0000 33...12..#0+0d\n", 256);
+	ft_printf("@main_ftprintf: %###-#0000 33...12..#0+0d\n", 256);
+	printf("%-33.12.d\n", 256);
+	ft_printf("%-33.12.d\n", 256);
+
 }
 /* Anything excpet float with value 0 and precisionn zero prints no digits */
 int main(void)
@@ -540,12 +588,13 @@ int main(void)
 //	test_percent();
 //	test_interesting();
 //	test_rounder();
-//	single_float();
+	single_float();
 //	test_long_double();
 //	test_str();
 //	float_play();
-	test_char();
+//	test_char();
 //	test_ptr();
 //	test_minus();
+//	test_unsigned();
 	return (0);
 }
