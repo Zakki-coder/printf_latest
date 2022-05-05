@@ -459,7 +459,7 @@ void right_adjusted_octal(t_fs *fs, unsigned long long ull, int len)
 			fs->print_len += print_spaces(fs->width - fs->precision);
 		else
 			fs->print_len += print_spaces(fs->width - len);
-		if (ull == 0)
+		if (ull == 0 || fs->flags & HASH)
 			fs->print_len += print_zeroes(1);
 		fs->print_len += print_zeroes(fs->precision - len);
 	}
@@ -607,7 +607,7 @@ void right_adjusted_hexa(t_fs *fs, unsigned long long ull, int len)
 		if (fs->flags & HASH && ull > 0)
 		{
 			put_hexa_prefix(fs);	
-			len += 2;
+			//len += 2;
 		}
 		fs->print_len += print_zeroes(fs->precision - len);
 	}

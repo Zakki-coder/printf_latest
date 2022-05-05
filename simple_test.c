@@ -174,6 +174,8 @@ void test_x()
 //	ft_printf("%ll#x\n", 9223372036854775807);
 	printf("|%.4x|\n", 42);
 	ft_printf("|%.4x|\n", 42);
+	printf("{%#.5x}\n", 1);
+	ft_printf("{%#.5x}\n", 1);
 }
 
 void wtf(void)
@@ -211,14 +213,16 @@ void test_print_octal()
 {
 	int d = 0;
 
-	printf("|%15.4o|\n", 42);
-	ft_printf("|%15.4o|\n", 42);
-	printf("|%15.4o|\n", 0);
-	ft_printf("|%15.4o|\n", 0);
-	printf("|%.4o|\n", 424242);
-	ft_printf("|%.4o|\n", 424242);
-	printf("|%15.4o|\n", 424242);
-	ft_printf("|%15.4o|\n", 424242);
+//	printf("|%15.4o|\n", 42);
+//	ft_printf("|%15.4o|\n", 42);
+//	printf("|%15.4o|\n", 0);
+//	ft_printf("|%15.4o|\n", 0);
+//	printf("|%.4o|\n", 424242);
+//	ft_printf("|%.4o|\n", 424242);
+//	printf("|%15.4o|\n", 424242);
+//	ft_printf("|%15.4o|\n", 424242);
+	printf("%#.3o\n", 1);
+	ft_printf("%#.3o\n", 1);
 	//If precision larger than width and number then add zeroes to front
 }
 
@@ -540,17 +544,21 @@ void test_ptr()
 //	ft_printf("%.0p, %.p\n", 0, 0);
 //  	printf("%p\n", &nb);
 //  	ft_printf("%p\n", &nb);
-//	res1 = printf("%.0p, %.p\n", 0, 0);
-//	res2 = ft_printf("%.0p, %.p\n", 0, 0);
-	res1 = printf("%.5p\n", 0);
-	res2 = ft_printf("%.5p\n", 0);
-	printf("Expected %d, Yours: %d\n", res1, res2);
-	res1 = printf("|%9.2p|\n", 1234);
-	res2 = ft_printf("|%9.2p|\n", 1234);
-	printf("Expected %d, Yours: %d\n", res1, res2);
-	res1 = printf("|%2.9p|\n", 1234);
-	res2 = ft_printf("|%2.9p|\n", 1234);
-	printf("Expected %d, Yours: %d\n", res1, res2);
+	res1 = printf("%.0p, %.p\n", 0, 0);
+	res2 = ft_printf("%.0p, %.p\n", 0, 0);
+//	res1 = printf("%.5p\n", 0);
+//	res2 = ft_printf("%.5p\n", 0);
+//	printf("Expected %d, Yours: %d\n", res1, res2);
+//	res1 = printf("|%9.2p|\n", 1234);
+//	res2 = ft_printf("|%9.2p|\n", 1234);
+//	printf("Expected %d, Yours: %d\n", res1, res2);
+//	res1 = printf("|%2.9p|\n", 1234);
+//	res2 = ft_printf("|%2.9p|\n", 1234);
+//	printf("Expected %d, Yours: %d\n", res1, res2);
+	printf("{%5p}\n", 0);
+	ft_printf("{%5p}\n", 0);
+	printf("{%-15p}\n", 0);
+	ft_printf("{%-15p}\n", 0);
 }
 
 void test_minus()
@@ -583,12 +591,12 @@ int main(void)
 //	test_x();
 //	wtf();
 //	test_octal_len();
-//	test_print_octal();
+	test_print_octal();
 /*	copy tests from percent and interesting to automatic test file NOW */
 //	test_percent();
 //	test_interesting();
 //	test_rounder();
-	single_float();
+//	single_float();
 //	test_long_double();
 //	test_str();
 //	float_play();
