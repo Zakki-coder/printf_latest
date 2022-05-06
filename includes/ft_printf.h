@@ -65,10 +65,11 @@ unsigned int hexa_len(t_fs *f_str, unsigned long long ull); //FOR DEBUG
 void	abs_putnbr(unsigned long long n);		//FOR DEBUG
 unsigned long long	convert_to_octal(unsigned long long ull); //FOR DEBUG
 char	*absolute_itoa(long long ll, int *n); //FOR DEBUG
-void	get_modifiers(t_fs *f_str);	//FOR DEBUG
-void	get_precision(t_fs *f_str); //FOR DEBUG
-void	get_width(t_fs *f_str);	//FOR DEBUG
-void	get_flags(t_fs *f_str); //FOR DEBUG
+void	get_modifiers(t_fs *f_str, const char *fs);	//FOR DEBUG
+void	get_precision(t_fs *f_str, const char *fs); //FOR DEBUG
+void	get_width(t_fs *f_str, const char *fs);	//FOR DEBUG
+void	get_flags(t_fs *f_str, char *fs);
+char	*search_conversion(const char *fs);
 int		is_conversion(char c);	//FOR DEBUG
 int		ft_printf(const char *str, ...);
 

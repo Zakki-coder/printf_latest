@@ -86,23 +86,23 @@ int print_chars(t_fs *f_str)
 	return (1);
 }
 
-void get_flags(t_fs *f_str)
+void get_flags(t_fs *f_str, char *fs)
 {
 	int *flags;
 	const char **s;
 
-	s = &f_str->str;
+//	s = &f_str->str;
 	flags = &f_str->flags;
 	//Traverse in a loop until no flag is ecountered, return int where flag have been encoded as bits	
-	if (**s == '#')	
+	if (ft_strchr(fs, '#'))
 		*flags |= HASH;
-	if (**s == '-')
+	if (ft_strchr(fs, '-'))
 		*flags |= MINUS;
-	if (**s == '0')
+	if (ft_strchr(fs, '0'))
 		*flags |= ZERO;
-	if (**s == '+')
+	if (ft_strchr(fs, '+'))
 		*flags |= PLUS;
-	if (**s == ' ')
+	if (ft_strchr(fs, ' '))
 		*flags |= SPACE;
 }
 
@@ -127,63 +127,63 @@ int not_atoi(const char **s)
 	return(n);
 }
 	
-void get_width(t_fs *f_str)
+void get_width(t_fs *f_str, const char *format)
 {
 	long int n;
-	const char **s;
 	
-	s = &f_str->str;
 	n = 0;
-	if (ft_isdigit(**s) && **s != '0')
+	while (*format != '\0')
 	{
-		n = not_atoi(s);
-		if(n <= MAX_INT) //At least on linux this is the limit
-			f_str->width = n;
-		while(ft_isdigit(**s))
-			++f_str->str;
-	}
-	else if (**s == '*' && *(*s - 1) != '.')
-	{
-		n = (int)va_arg(f_str->argcs, int);
-		if (n < 0)
-			f_str->flags |= MINUS;
-		if (n < 0)
-			n *= -1;
-		f_str->width = n; 
+		++format;
+		if (ft_isdigit(*format) && *(format - 1) != '.' && *format != '0')
+		{
+			n = not_atoi(&format);
+			if(n <= MAX_INT) //At least on linux this is the limit
+				f_str->width = n;
+		}
+		else if (*format == '*' && *(format - 1) != '.')
+		{
+			n = (int)va_arg(f_str->argcs, int);
+			if (n < 0)
+				f_str->flags |= MINUS;
+			if (n < 0)
+				n *= -1;
+			f_str->width = n; 
+		}
 	}
 }
 
 /* precision has been initialized to -1 and changes to at least to zero if . is found *precision */
-void get_precision(t_fs *f_str)
+void get_precision(t_fs *f_str, const char *format)
 {
 	long int n;
-	const char **s;
 
 	n = 0;
-	s = &f_str->str;
-	if(**s == '.' && *(*s + 1) != '*')
+	while (*format != '\0')
 	{
-		f_str->is_precision = 1;
-		while (**s == '.')
-			++(*s);
-		if(ft_isdigit(**s))
+		++format;
+		if(*format == '.' && *(format + 1) != '*')
 		{
-			n = not_atoi(s);
-			if(n > f_str->precision && n <= MAX_INT)
-				f_str->precision = n;
-		}
-		else
-			f_str->precision = 0;
-		while(ft_isdigit(**s))
-			++f_str->str;
-	}
-	else if (**s == '*' && *(*s - 1) == '.')
-	{
-		n = (int)va_arg(f_str->argcs, int);
-		if (n >= 0)
-		{
-			f_str->precision = n;
 			f_str->is_precision = 1;
+			while (*format == '.')
+				++(format);
+			if(ft_isdigit(*format))
+			{
+				n = not_atoi(&format);
+				if(n > f_str->precision && n <= MAX_INT)
+					f_str->precision = n;
+			}
+			else
+				f_str->precision = 0;
+		}
+		else if (*format == '*' && *(format - 1) == '.')
+		{
+			n = (int)va_arg(f_str->argcs, int);
+			if (n >= 0)
+			{
+				f_str->precision = n;
+				f_str->is_precision = 1;
+			}
 		}
 	}
 }
@@ -194,26 +194,26 @@ int is_modifier(char c)
 	return (c == 'U' || c == 'L' || c == 'l' || c == 'h');
 }
 
-void get_modifiers(t_fs *f_str)
+void get_modifiers(t_fs *f_str, const char *format)
 {
-	const char **s;
-
-	s = &f_str->str;
 	//loop until largest modifier is found, or conversion char or null is found
 	//No need to worry about over or underflow because str is limited with % and \0
 	//What should happen in case like hhh?
 	//h is more significant is my assumption. So if hhh then at least h.
-		if (**s == 'L')
+	while (*format != '\0')
+	{
+		if (*format == 'L')
 			f_str->modifier |= LDBL;
-		if (**s == 'l' && *(*s + 1) == 'l')
+		if (*format == 'l' && *(format + 1) == 'l')
 			f_str->modifier |= LLONG;
-		if ((**s == 'l' && *(*s - 1) != 'l' && *(*s + 1) != 'l') || **s == 'U')
+		if ((*format == 'l' && *(format - 1) != 'l' && *(format + 1) != 'l') || *format == 'U')
 			f_str->modifier |= LONG;
-		if (**s == 'h' && *(*s + 1) == 'h'
-			&& *(*s - 1) != 'h' && *(*s + 2) != 'h' && (*s)++)
+		if (*format == 'h' && *(format + 1) == 'h'
+			&& *(format - 1) != 'h' && *(format + 2) != 'h' && (format)++)
 			f_str->modifier |= CHAR;
-		else if(**s == 'h')
+		else if(*format == 'h')
 			f_str->modifier |= SHORT;
+	}
 }
 
 long long get_argument(t_fs *f_str)
@@ -877,7 +877,7 @@ int is_correct_format_str(char c)
 			|| c == '%');
 }
 
-void no_conversion(t_fs *f_str)
+int no_conversion(t_fs *f_str)
 {
 	if (f_str->width >= 1)
 		f_str->width -= 1;
@@ -885,42 +885,74 @@ void no_conversion(t_fs *f_str)
 		print_zeroes(f_str->width);
 	else
 		print_spaces(f_str->width);
+	return (1);
 }
 
-int search_conversion(t_fs *f_str)
+char *search_conversion(const char *fs)
 {
 	char *conversions = "diouUxXfcsp";
 	int i;
+	char *ret_conversion;
 
 	i = 0;
 	while (conversions[i] != '\0')
 	{
-		if (ft_strchr(f_str->str, conversions[i]))
-			return (1);
+		ret_conversion = ft_strchr(fs, conversions[i]); 
+		if (ret_conversion)
+			return (ret_conversion);
 		++i;
 	}
-	return (0);
+	return (NULL);
 }
 
 void parser(t_fs *f_str)
 {
 	const char **str;
+	const char *conversion;
+	const char *percent;
+	char *format;
 
-	str = &f_str->str;
+	//TODO Integrate parse_conversion, at leas %% is missing.
+	if (!search_conversion(f_str->str) && no_conversion(f_str));
+		return;
+	conversion = NULL;
+	while (*f_str->str != '\0')
+	{
+		if (conversion)
+			f_str->str = conversion;
+		percent = ft_strchr(f_str->str, '%');
+		conversion = search_conversion(percent);
+		if (!(percent && conversion))
+		{
+			f_str->print_len += write(1, f_str->str, fs_strlen(f_str->str));
+			return ;
+		}
+		else
+		{
+			f_str->print_len += write(1, f_str->str, percent - f_str->str);
+			format = (char *)ft_memalloc(sizeof(*format) * (conversion - percent) + 1);
+			if (format == NULL) //FREE
+				exit(-1);
+			ft_memcpy(format, percent, conversion - percent);
+			format[conversion - percent + 1] = '\0';
+			get_flags(f_str, format);
+			get_width(f_str, format);
+			get_precision(f_str, format);
+			get_modifiers(f_str, format);
+			free (format);
+		}
+	}
+/*	str = &f_str->str;
 	while (**str != '\0')
 	{
-	//Traverse and print fs until %, with print_chars then send to get_flags
+	//Traverse and print format until %, with print_chars then send to get_flags
 	if(print_chars(f_str) == -1)
 		return ;
-	if (search_conversion(f_str) || **str == '%')
+	if (conversion || **str == '%')
 		while((!is_conversion(**str) || **str == '%') && **str != '\0')
 		{
 			++(*str);
-			get_flags(f_str);
 	//Loop for width(number), precision(.number), length mod(letter) until conversion or \0 is encountered
-			get_width(f_str);
-			get_precision(f_str);
-			get_modifiers(f_str);
 			if (**str == '%' || **str == 'U')
 				break;
 		}
@@ -930,7 +962,7 @@ void parser(t_fs *f_str)
 		else
 			no_conversion(f_str);
 	}
-	//If we find \0 before conversion, nothing gets printed int the '%'-'\0' range, is it correcto?
+*/	//If we find \0 before conversion, nothing gets printed int the '%'-'\0' range, is it correcto?
 }
 
 int	ft_printf(const char *str, ...)
