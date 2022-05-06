@@ -74,6 +74,24 @@ void put_character(t_fs *f_str)
     ++f_str->str;
 }
 
+void itoxa_wrapper(t_fs *f_str, unsigned long long address)
+{
+    int precision;
+    int width;
+    int is_precision;
+    
+    precision = f_str->precision;
+    width = f_str->width;
+    is_precision = f_str->is_precision;
+    f_str->is_precision = 0;
+    f_str->width = 0;
+    f_str->precision = 0;
+    itoxa(f_str, address);
+    f_str->is_precision = is_precision;
+    f_str->width = width;
+    f_str->precision = precision;
+}
+
 void put_pointer_address(t_fs *f_str)
 {
     unsigned long long address;
@@ -90,15 +108,10 @@ void put_pointer_address(t_fs *f_str)
         f_str->print_len += print_zeroes(f_str->precision - len);
     if (address == 0 && (!(f_str->is_precision) || f_str->precision > 0))
             f_str->print_len += write(1, "0", 1);
+    if (address != 0)
+        itoxa_wrapper(f_str, address);
+    else
+        ++(f_str->str);
     if (f_str->flags & MINUS)
         f_str->print_len += print_spaces(f_str->width - len - 2);
-    if (address == 0)
-    {
-        ++(f_str->str);
-        return;
-    }
-    f_str->is_precision = 0;
-    f_str->width = 0;
-    f_str->precision = 0;
-    itoxa(f_str, address);
 }

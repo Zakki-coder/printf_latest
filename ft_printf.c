@@ -104,8 +104,6 @@ void get_flags(t_fs *f_str)
 		*flags |= PLUS;
 	if (**s == ' ')
 		*flags |= SPACE;
-	if (is_flag(**s))	
-		++(f_str->str);
 }
 
 int is_conversion(char c)
@@ -131,7 +129,7 @@ int not_atoi(const char **s)
 	
 void get_width(t_fs *f_str)
 {
-	int n;
+	long int n;
 	const char **s;
 	
 	s = &f_str->str;
@@ -139,22 +137,26 @@ void get_width(t_fs *f_str)
 	if (ft_isdigit(**s) && **s != '0')
 	{
 		n = not_atoi(s);
-		if(n > f_str->width && n <= MAX_INT) //At least on linux this is the limit
+		if(n <= MAX_INT) //At least on linux this is the limit
 			f_str->width = n;
 		while(ft_isdigit(**s))
 			++f_str->str;
 	}
 	else if (**s == '*' && *(*s - 1) != '.')
 	{
-		f_str->width = (int)va_arg(f_str->argcs, int);
-		++f_str->str;
+		n = (int)va_arg(f_str->argcs, int);
+		if (n < 0)
+			f_str->flags |= MINUS;
+		if (n < 0)
+			n *= -1;
+		f_str->width = n; 
 	}
 }
 
 /* precision has been initialized to -1 and changes to at least to zero if . is found *precision */
 void get_precision(t_fs *f_str)
 {
-	int n;
+	long int n;
 	const char **s;
 
 	n = 0;
@@ -177,9 +179,12 @@ void get_precision(t_fs *f_str)
 	}
 	else if (**s == '*' && *(*s - 1) == '.')
 	{
-		f_str->precision = (int)va_arg(f_str->argcs, int);
-		f_str->is_precision = 1;
-		++f_str->str;
+		n = (int)va_arg(f_str->argcs, int);
+		if (n >= 0)
+		{
+			f_str->precision = n;
+			f_str->is_precision = 1;
+		}
 	}
 }
 
@@ -290,7 +295,9 @@ void set_prefix(t_fs *f_str, char *out, unsigned int nb_len)
 		prefix = ' ';
 	else
 		return ;
-	if ((f & MINUS) || !f_str->is_precision)
+	if (!(f & MINUS) && f & ZERO && !f_str->is_precision)
+		f_str->precision = f_str->width - 1;
+	if ((f & MINUS))
 		*out = prefix;	
 	else
 		*(out + f_str->width - f_str->precision - 1/*nb_len - 1*/) = prefix; // nb_len - 1 changed to - precision
@@ -705,8 +712,14 @@ void itoxa(t_fs *f_str, long long nb)
 			put_hexa_prefix(f_str);
 			len += 2;
 		}
+		f_str->print_len += print_zeroes(f_str->precision - len);
 		hexa_print(f_str, nb);
-		f_str->print_len += print_spaces(f_str->width - len);
+		if (len > f_str->precision)
+			f_str->precision = len;
+		if (f_str->is_precision)
+			f_str->print_len += print_spaces(f_str->width - f_str->precision);
+		else
+			f_str->print_len += print_spaces(f_str->width - len);
 	}
 	++f_str->str;
 }

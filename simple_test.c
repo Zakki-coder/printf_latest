@@ -150,16 +150,30 @@ void test_d_i()
 	//ft_printf("@moulitest: %.10d\n", -42);
 //	printf("%-10.5d\n", 4242);
 //	ft_printf("%-10.5d\n", 4242);
-	printf("%-3.7d\n", -2375);
-	ft_printf("%-3.7d\n", -2375);
-	printf("|%-7d|\n", 33);
-	ft_printf("|%-7d|\n", 33);
-	printf("%010.5d\n", -216);
-	ft_printf("%010.5d\n", -216);
-	printf("%010d\n", -216);
-	ft_printf("%010d\n", -216);
-	printf("%0d\n", -216);
-	ft_printf("%0d\n", -216);
+//	printf("%-3.7d\n", -2375);
+//	ft_printf("%-3.7d\n", -2375);
+//	printf("|%-7d|\n", 33);
+//	ft_printf("|%-7d|\n", 33);
+//	printf("%010.5d\n", -216);
+//	ft_printf("%010.5d\n", -216);
+//	printf("%010d\n", -216);
+//	ft_printf("%010d\n", -216);
+//	printf("%0d\n", -216);
+//	ft_printf("%0d\n", -216);
+//	printf("%7d\n", -14);
+//	ft_printf("%7d\n", -14);
+//	printf("%0-8.5d\n", 34);
+//	ft_printf("%0-8.5d\n", 34);
+//	printf("%.*i\n", 6, -3);
+//	ft_printf("%.*i\n", 6, -3);
+//	printf("{%*3d}\n", 5, 0);
+//	ft_printf("{%*3d}\n", 5, 0);
+//	printf("{%.*3s}\n", 4, "lollo");
+//	ft_printf("{%.*3s}\n", 4, "lollo");
+//	printf("{%-15p}\n", 0);
+//	ft_printf("{%-15p}\n", 0);
+	printf("{%05.*d}\n", -15, 42);
+	ft_printf("{%05.*d}\n", -15, 42);
 }
 
 void test_x()
@@ -182,10 +196,18 @@ void test_x()
 //	ft_printf("Not real: %x\n", 4294967296);
 //	printf("%ll#x\n", 9223372036854775807);
 //	ft_printf("%ll#x\n", 9223372036854775807);
-	printf("|%.4x|\n", 42);
-	ft_printf("|%.4x|\n", 42);
-	printf("{%#.5x}\n", 1);
-	ft_printf("{%#.5x}\n", 1);
+//	printf("|%.4x|\n", 42);
+//	ft_printf("|%.4x|\n", 42);
+//	printf("{%#.5x}\n", 1);
+//	ft_printf("{%#.5x}\n", 1);
+//	printf("|%-8.5x|\n", 34);
+//	ft_printf("|%-8.5x|\n", 34);
+//	printf("|%-12.5x|\n", 34);
+//	ft_printf("|%-12.5x|\n", 34);
+//	printf("|%-7x|\n", 33);
+//	ft_printf("|%-7x|\n", 33);
+	printf("|%-8.3x|\n", 8375);
+	ft_printf("|%-8.3x|\n", 8375);
 }
 
 void wtf(void)
@@ -515,6 +537,8 @@ void test_str()
 //	ft_printf("%*.*s\n", 10, 2, "lol");
 	printf("%10.1s\n", "kuokka");
 	ft_printf("%10.1s\n", "kuokka");
+	printf("{%.*s}\n", 0, "42");
+	ft_printf("{%.*s}\n", 0, "42");
 }
 
 void test_char()
@@ -562,8 +586,8 @@ void test_ptr()
 //	ft_printf("%.0p, %.p\n", 0, 0);
 //  	printf("%p\n", &nb);
 //  	ft_printf("%p\n", &nb);
-	res1 = printf("%.0p, %.p\n", 0, 0);
-	res2 = ft_printf("%.0p, %.p\n", 0, 0);
+//	res1 = printf("%.0p, %.p\n", 0, 0);
+//	res2 = ft_printf("%.0p, %.p\n", 0, 0);
 //	res1 = printf("%.5p\n", 0);
 //	res2 = ft_printf("%.5p\n", 0);
 //	printf("Expected %d, Yours: %d\n", res1, res2);
@@ -573,10 +597,13 @@ void test_ptr()
 //	res1 = printf("|%2.9p|\n", 1234);
 //	res2 = ft_printf("|%2.9p|\n", 1234);
 //	printf("Expected %d, Yours: %d\n", res1, res2);
-	printf("{%5p}\n", 0);
-	ft_printf("{%5p}\n", 0);
-	printf("{%-15p}\n", 0);
-	ft_printf("{%-15p}\n", 0);
+//	printf("{%5p}\n", 0);
+//	ft_printf("{%5p}\n", 0);
+//	printf("{%-15p}\n", 0);
+//	ft_printf("{%-15p}\n", 0);
+	char *a1;
+	printf("|%-70p|\n", &a1);
+	ft_printf("|%-70p|\n", &a1);
 }
 
 void test_minus()
@@ -605,7 +632,7 @@ int main(void)
 //	test_get_precision();
 //	test_get_modifiers();	
 //	how_convers();
-	test_d_i();
+//	test_d_i();
 //	test_x();
 //	wtf();
 //	test_octal_len();
@@ -616,7 +643,7 @@ int main(void)
 //	test_rounder();
 //	single_float();
 //	test_long_double();
-//	test_str();
+	test_str();
 //	float_play();
 //	test_char();
 //	test_ptr();
