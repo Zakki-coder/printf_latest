@@ -48,6 +48,7 @@ typedef struct s_format_string
 	int			percent_flag;
 }				t_fs;
 
+int is_flag(char c);
 void put_character(t_fs *f_str);
 void itoxa(t_fs *f_str, long long nb);
 void put_pointer_address(t_fs *f_str);

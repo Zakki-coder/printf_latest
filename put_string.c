@@ -1,17 +1,33 @@
 #include "includes/ft_printf.h"
 
+int null_string(t_fs *f_str)
+{
+        if (f_str->flags & MINUS)
+        {
+            if (f_str->is_precision)
+                f_str->print_len += ft_printf("%-*.*s", f_str->width, f_str->precision, "(null)");
+            else
+                f_str->print_len += ft_printf("%-*s", f_str->width, "(null)");
+        }
+        else
+        {
+            if (f_str->is_precision)
+                f_str->print_len += ft_printf("%*.*s", f_str->width, f_str->precision, "(null)");
+            else
+                f_str->print_len += ft_printf("%*s", f_str->width, "(null)");
+        }
+        ++f_str->str;
+        return (1);
+}
+
 void put_string(t_fs *f_str)
 {
     const char *str;
     unsigned long long len;
 
     str = va_arg(f_str->argcs, const char *);
-    if (str == 0)
-    {
-        f_str->print_len += write(1, "(null)", 6);
-        ++f_str->str;
+    if (str == 0 && null_string(f_str))
         return ;
-    }
     len = ft_strlen(str);
     if (f_str->precision < 0)
         f_str->precision = 0;
@@ -67,8 +83,6 @@ void put_pointer_address(t_fs *f_str)
     void_argument = va_arg(f_str->argcs, void *);
     address = (unsigned long long)void_argument;
     len = hexa_len(f_str, address);
-//    if (address == 0)
- //       len = 0;
     if (!(f_str->flags & MINUS))
         f_str->print_len += print_spaces(f_str->width - len - 2);
     f_str->print_len += write(1, "0x", 2);

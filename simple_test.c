@@ -148,8 +148,18 @@ void test_d_i()
 	//ft_printf("% 10.11d\n", 4242);
 	//printf("@moulitest: %.10d\n", -42);
 	//ft_printf("@moulitest: %.10d\n", -42);
-	printf("%-10.5d\n", 4242);
-	ft_printf("%-10.5d\n", 4242);
+//	printf("%-10.5d\n", 4242);
+//	ft_printf("%-10.5d\n", 4242);
+	printf("%-3.7d\n", -2375);
+	ft_printf("%-3.7d\n", -2375);
+	printf("|%-7d|\n", 33);
+	ft_printf("|%-7d|\n", 33);
+	printf("%010.5d\n", -216);
+	ft_printf("%010.5d\n", -216);
+	printf("%010d\n", -216);
+	ft_printf("%010d\n", -216);
+	printf("%0d\n", -216);
+	ft_printf("%0d\n", -216);
 }
 
 void test_x()
@@ -481,22 +491,30 @@ void test_long_double(void)
 
 void test_str()
 {
-	printf("|%.-20s|\n", "KissaKoira");
-	ft_printf("|%.-20s|\n", "KissaKoira");
-	printf("|%-020s|\n", "KissaKoira");
-	ft_printf("|%-020s|\n", "KissaKoira");
-	printf("|%0|\n", "KissaKoira");
-	ft_printf("|%0|\n", "KissaKoira");
-	printf("|%01|\n", "KissaKoira");
-	ft_printf("|%01|\n", "KissaKoira");
-	printf("|%20|\n", "KissaKoira");
-	ft_printf("|%20|\n", "KissaKoira");
-	printf("|%|\n", "KissaKoira");
-	ft_printf("|%|\n", "KissaKoira");
-	printf("|%1|\n", "KissaKoira");
-	ft_printf("|%1|\n", "KissaKoira");
-	printf("|%s|\n", NULL);
-	ft_printf("|%s|\n", NULL);
+	int res1, res2;
+//	printf("|%.-20s|\n", "KissaKoira");
+//	ft_printf("|%.-20s|\n", "KissaKoira");
+//	printf("|%-020s|\n", "KissaKoira");
+//	ft_printf("|%-020s|\n", "KissaKoira");
+//	printf("|%0|\n", "KissaKoira");
+//	ft_printf("|%0|\n", "KissaKoira");
+//	printf("|%01|\n", "KissaKoira");
+//	ft_printf("|%01|\n", "KissaKoira");
+//	printf("|%20|\n", "KissaKoira");
+//	ft_printf("|%20|\n", "KissaKoira");
+//	printf("|%|\n", "KissaKoira");
+//	ft_printf("|%|\n", "KissaKoira");
+//	printf("|%1|\n", "KissaKoira");
+//	ft_printf("|%1|\n", "KissaKoira");
+//	printf("|%s|\n", NULL);
+//	ft_printf("|%s|\n", NULL);
+//	res1 = printf("%32s\n", NULL);
+//	res2 = ft_printf("%32s\n", NULL);
+//	printf("res1: %d res2: %d\n", res1, res2);
+//	printf("%*.*s\n", 10, 2, "lol");
+//	ft_printf("%*.*s\n", 10, 2, "lol");
+	printf("%10.1s\n", "kuokka");
+	ft_printf("%10.1s\n", "kuokka");
 }
 
 void test_char()
@@ -587,11 +605,11 @@ int main(void)
 //	test_get_precision();
 //	test_get_modifiers();	
 //	how_convers();
-//	test_d_i();
+	test_d_i();
 //	test_x();
 //	wtf();
 //	test_octal_len();
-	test_print_octal();
+//	test_print_octal();
 /*	copy tests from percent and interesting to automatic test file NOW */
 //	test_percent();
 //	test_interesting();

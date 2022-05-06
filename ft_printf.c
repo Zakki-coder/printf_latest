@@ -94,20 +94,18 @@ void get_flags(t_fs *f_str)
 	s = &f_str->str;
 	flags = &f_str->flags;
 	//Traverse in a loop until no flag is ecountered, return int where flag have been encoded as bits	
-	while(**s == '#' || **s == '-' || **s == '0' || **s == '+' || **s == ' ')
-	{
-		if (**s == '#')	
-			*flags |= HASH;
-		if (**s == '-')
-			*flags |= MINUS;
-		if (**s == '0')
-			*flags |= ZERO;
-		if (**s == '+')
-			*flags |= PLUS;
-		if (**s == ' ')
-			*flags |= SPACE;
-		++(*s);
-	}
+	if (**s == '#')	
+		*flags |= HASH;
+	if (**s == '-')
+		*flags |= MINUS;
+	if (**s == '0')
+		*flags |= ZERO;
+	if (**s == '+')
+		*flags |= PLUS;
+	if (**s == ' ')
+		*flags |= SPACE;
+	if (is_flag(**s))	
+		++(f_str->str);
 }
 
 int is_conversion(char c)
@@ -138,11 +136,18 @@ void get_width(t_fs *f_str)
 	
 	s = &f_str->str;
 	n = 0;
-	if (ft_isdigit(**s))
+	if (ft_isdigit(**s) && **s != '0')
 	{
 		n = not_atoi(s);
 		if(n > f_str->width && n <= MAX_INT) //At least on linux this is the limit
 			f_str->width = n;
+		while(ft_isdigit(**s))
+			++f_str->str;
+	}
+	else if (**s == '*' && *(*s - 1) != '.')
+	{
+		f_str->width = (int)va_arg(f_str->argcs, int);
+		++f_str->str;
 	}
 }
 
@@ -154,7 +159,7 @@ void get_precision(t_fs *f_str)
 
 	n = 0;
 	s = &f_str->str;
-	if(**s == '.')
+	if(**s == '.' && *(*s + 1) != '*')
 	{
 		f_str->is_precision = 1;
 		while (**s == '.')
@@ -167,6 +172,14 @@ void get_precision(t_fs *f_str)
 		}
 		else
 			f_str->precision = 0;
+		while(ft_isdigit(**s))
+			++f_str->str;
+	}
+	else if (**s == '*' && *(*s - 1) == '.')
+	{
+		f_str->precision = (int)va_arg(f_str->argcs, int);
+		f_str->is_precision = 1;
+		++f_str->str;
 	}
 }
 
@@ -277,13 +290,13 @@ void set_prefix(t_fs *f_str, char *out, unsigned int nb_len)
 		prefix = ' ';
 	else
 		return ;
-	if ((f & MINUS) || (f & ZERO))
+	if ((f & MINUS) || !f_str->is_precision)
 		*out = prefix;	
 	else
 		*(out + f_str->width - f_str->precision - 1/*nb_len - 1*/) = prefix; // nb_len - 1 changed to - precision
 }
 
-char *not_itoa(char *out, unsigned long long nb, int len, int diff)
+char *not_itoa(char *out, unsigned long long nb, int len, int prefix)
 {
 	unsigned long long	ll;
 
@@ -292,7 +305,7 @@ char *not_itoa(char *out, unsigned long long nb, int len, int diff)
 	{
 		ll = nb - ((nb / 10) * 10);
 		nb /= 10;
-		*(out + diff + --len) = ll + '0';
+		*(out + prefix + --len) = ll + '0';
 	}	
 	return (out);
 }
@@ -332,7 +345,7 @@ void itodiutoa(t_fs *f_str, long long ll)
 {
 	char	*out; //Remember to free
 	int		len;
-	int		diff;
+	int		prefix;
 	unsigned long long ull;
 	/* Zero case hasnt been tested */	
 	if (zero_case(f_str, ll))
@@ -342,29 +355,30 @@ void itodiutoa(t_fs *f_str, long long ll)
 	handle_width(f_str, len); //Remember to free
 	if (f_str->precision < len)
 		f_str->precision = len;
-	diff = f_str->width - len;
-	out = (char *)ft_memalloc(sizeof(*out) * f_str->width);
+	prefix = f_str->width - len;
+	out = (char *)ft_memalloc(sizeof(*out) * f_str->width + 1);
 	if (out == NULL)
 		exit (-1);
 	ft_memset(out, ' ', f_str->width);
 	if (f_str->flags & MINUS)
 	{
+		prefix = 0;
 		if  (ll < 0 || f_str->flags & PLUS || f_str->flags & SPACE)
-			diff = 1;
-		else
-			diff = 0;
+			prefix = 1;
 		if (f_str->precision - len > 0)
 		{
-			ft_memset(out + diff, '0', f_str->precision - len);
-			diff += f_str->precision - len;
+			ft_memset(out + prefix, '0', f_str->precision - len);
+			prefix += f_str->precision - len;
 		}
 	}
 	if (!(f_str->flags & MINUS) && f_str->is_precision) //ON linux we generate zeroes with formula precision - nb len, even if no zero flag. On mac not?
 		ft_memset(out + (f_str->width - f_str->precision), '0', f_str->precision);
 	else if (!(f_str->flags & MINUS) && f_str->flags & ZERO)
 		ft_memset(out, '0', f_str->width);
-	out = not_itoa(out, ull, len, diff); //Make a function to decide which type of number is parsed, d , o or x, malloc protection is in handle_width
+	out = not_itoa(out, ull, len, prefix); //Make a function to decide which type of number is parsed, d , o or x, malloc protection is in handle_width
 	set_prefix(f_str, out, len);
+	if ((prefix + len) > f_str->width)
+		f_str->width = prefix + len;
 	f_str->print_len += write(1, out, f_str->width);
 	++f_str->str;
 	free(out);
