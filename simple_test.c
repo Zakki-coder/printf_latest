@@ -35,28 +35,6 @@ void test_is_conversion()
 	printf("Is_conversion should return 0 and returns: %d\n", is_conversion('z'));
 }
 
-void test_get_modifiers()
-{
-	t_fs f_str = {.modifier = 0};	
-
-	f_str.modifier = 0;
-	f_str.str = "L";
-	get_modifiers(&f_str);
-	print_bit(f_str.modifier);	 
-	f_str.modifier = 0;
-	f_str.str = "Llll";
-	get_modifiers(&f_str);
-	print_bit(f_str.modifier);	 
-	f_str.modifier = 0;
-	f_str.str = "Lllhl";
-	get_modifiers(&f_str);
-	print_bit(f_str.modifier);	 
-	f_str.modifier = 0;
-	f_str.str = "Lhh";
-	get_modifiers(&f_str);
-	print_bit(f_str.modifier);	 
-}
-
 void how_convers()
 {
 	long long			ld;
@@ -222,10 +200,11 @@ void test_percent()
 	//res = printf("%%%5d\n", 3);
 	//res2 = ft_printf("%%%5d\n", 3);
 	//printf("correct: %d yours: %d\n", res, res2);	
-	printf("%5%\n");
-	ft_printf("%5%\n");
-	printf("%-5%\n");
-	ft_printf("%-5%\n");
+//	printf("%5%\n");
+//	ft_printf("%5%\n");
+	ft_printf("%10x", 42);
+//	printf("%-5%\n");
+//	ft_printf("%-5%\n");
 
 }
 
@@ -380,8 +359,13 @@ void single_float()
 //	printf("{%Lf}\n", 1.42l);
 //	ft_printf("{%Lf}\n", 1.42l);
 //	printf("{%f}{%lf}{%Lf}\n", 1.42, 1.42, 1.42l);
+//	printf("{%f}{%lf}{%Lf}\n", 1.42, 1.42, 1.42l);
 //	ft_printf("{%f}{%lf}{%Lf}\n", 1.42, 1.42, 1.42l);
-	ft_printf("{%f}\n", 1.42);
+//	printf("{%f}{%lf}{%Lf}\n", -1.42, -1.42, -1.42l);
+	ft_printf("{%f}{%lf}{%Lf}\n", -1.42, -1.42, -1.42l);
+	ft_printf("{%f}\n", -12.42);
+	ft_printf("{%f}\n", -123.42);
+	ft_printf("{%f}\n", -0.42);
 	ft_printf("{%lf}\n", 1.42);
 	ft_printf("{%Lf}\n", 1.42l);
 }
@@ -488,7 +472,10 @@ void test_str()
 //	ft_printf("%10.1s\n", "kuokka");
 //	printf("{%.*s}\n", 0, "42");
 //	ft_printf("{%.*s}\n", 0, "42");
-	ft_printf("|%-+10.4s|", "Halloo");
+//	ft_printf("|%-+10.4s|", "Halloo");
+//	ft_printf("%s is a string", "this");
+	printf("%4.15s\n", "42");
+	ft_printf("%4.15s\n", "42");
 }
 
 void test_char()
@@ -591,9 +578,9 @@ int main(void)
 //	test_percent();
 //	test_interesting();
 //	test_rounder();
-//	single_float();
+	single_float();
 //	test_long_double();
-	test_str();
+//	test_str();
 //	float_play();
 //	test_char();
 //	test_ptr();

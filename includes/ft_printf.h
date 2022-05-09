@@ -69,7 +69,7 @@ void	get_modifiers(t_fs *f_str, const char *fs);	//FOR DEBUG
 void	get_precision(t_fs *f_str, const char *fs); //FOR DEBUG
 void	get_width(t_fs *f_str, const char *fs);	//FOR DEBUG
 void	get_flags(t_fs *f_str, char *fs);
-char	*search_conversion(const char *fs);
+const char	*search_conversion(const char *fs);
 int		is_conversion(char c);	//FOR DEBUG
 int		ft_printf(const char *str, ...);
 

@@ -98,7 +98,7 @@ void get_flags(t_fs *f_str, char *fs)
 		*flags |= HASH;
 	if (ft_strchr(fs, '-'))
 		*flags |= MINUS;
-	if (ft_strchr(fs, '0'))
+	if (ft_strchr(fs, '0') && !ft_isdigit(*(ft_strchr(fs, '0') - 1)))
 		*flags |= ZERO;
 	if (ft_strchr(fs, '+'))
 		*flags |= PLUS;
@@ -135,6 +135,9 @@ void get_width(t_fs *f_str, const char *format)
 	while (*format != '\0')
 	{
 		++format;
+		if (*format == '.' && ++format)
+			while(ft_isdigit(*format))
+				++format;
 		if (ft_isdigit(*format) && *(format - 1) != '.' && *format != '0')
 		{
 			n = not_atoi(&format);
@@ -213,6 +216,7 @@ void get_modifiers(t_fs *f_str, const char *format)
 			f_str->modifier |= CHAR;
 		else if(*format == 'h')
 			f_str->modifier |= SHORT;
+		++format;
 	}
 }
 
@@ -286,6 +290,8 @@ void set_prefix(t_fs *f_str, char *out, unsigned int nb_len)
 	int f;
 	char prefix;
 
+	if (*f_str->str == 'f')
+		f_str->precision = nb_len;
 	f = f_str->flags;
 	if (f_str->neg)
 		prefix = '-';
@@ -300,7 +306,7 @@ void set_prefix(t_fs *f_str, char *out, unsigned int nb_len)
 	if ((f & MINUS))
 		*out = prefix;	
 	else
-		*(out + f_str->width - f_str->precision - 1/*nb_len - 1*/) = prefix; // nb_len - 1 changed to - precision
+		*(out + f_str->width - f_str->precision - 1) = prefix; // nb_len - 1 changed to - precision
 }
 
 char *not_itoa(char *out, unsigned long long nb, int len, int prefix)
@@ -824,7 +830,7 @@ void put_percent(t_fs *f_str)
 	++f_str->str;
 }
 
-void parse_conversion(t_fs *f_str)
+void parse_conversion(t_fs *f_str, char conversion)
 {
 	long double			ld;
 	long long int		ll;
@@ -835,15 +841,15 @@ void parse_conversion(t_fs *f_str)
 	//One function to return long long and one to return long double
 	/* TODO get rid of get_argument and function dispatcher 
 		You can still use cast_to_modifier */
-	if (*f_str->str != 'X' && *f_str->str != 'x' && *f_str->str != 'f' && *f_str->str != '%' && *f_str->str != 's' && *f_str->str != 'c' && *f_str->str != 'p')
+	if (conversion != 'X' && conversion != 'x' && conversion != 'f' && conversion != '%' && conversion != 's' && conversion != 'c' && conversion != 'p')
 	{
-		if (*f_str->str != 'd' && *f_str->str != 'i')
+		if (conversion != 'd' && conversion != 'i')
 		{
 			ull = get_argument_u(f_str);
 			ull = cast_to_modifier_u(f_str, ull);
 			function_dispatcher(f_str, ull);
 		}
-		else if (*f_str->str != 'X' || *f_str->str != 'x')
+		else if (conversion != 'X' || conversion != 'x')
 		{
 			ll = get_argument(f_str);
 			ll = cast_to_modifier(f_str, ll);
@@ -851,15 +857,15 @@ void parse_conversion(t_fs *f_str)
 		}
 
 	}
-	else if (*f_str->str == 'X' || *f_str->str == 'x')
+	else if (conversion == 'X' || conversion == 'x')
 		get_itoxa_argument(f_str);
-	else if (*f_str->str == '%')
+	else if (conversion == '%')
 		put_percent(f_str);
-	else if (*f_str->str == 's')
+	else if (conversion == 's')
 		put_string(f_str);
-	else if (*f_str->str == 'c')
+	else if (conversion == 'c')
 		put_character(f_str);
-	else if (*f_str->str == 'p')
+	else if (conversion == 'p')
 		put_pointer_address(f_str);
 	else
 		float_to_ascii(f_str);
@@ -888,18 +894,26 @@ int no_conversion(t_fs *f_str)
 	return (1);
 }
 
-char *search_conversion(const char *fs)
+const char *search_conversion(const char *fs)
 {
-	char *conversions = "diouUxXfcsp";
+	char *conversions = "diouUxXfcsp%";
 	int i;
+	int k;
 	char *ret_conversion;
 
 	i = 0;
-	while (conversions[i] != '\0')
+	k = 0;
+	if (!fs)
+		return (NULL);
+	while (fs[i] != '\0')
 	{
-		ret_conversion = ft_strchr(fs, conversions[i]); 
-		if (ret_conversion)
-			return (ret_conversion);
+		while (conversions[k] != '\0')
+		{
+			if (conversions[k] == fs[i])
+				return (&fs[i]);
+			++k;
+		}
+		k = 0;
 		++i;
 	}
 	return (NULL);
@@ -913,20 +927,21 @@ void parser(t_fs *f_str)
 	char *format;
 
 	//TODO Integrate parse_conversion, at leas %% is missing.
-	if (!search_conversion(f_str->str) && no_conversion(f_str));
-		return;
 	conversion = NULL;
 	while (*f_str->str != '\0')
 	{
 		if (conversion)
-			f_str->str = conversion;
+			f_str->str = conversion + 1;
 		percent = ft_strchr(f_str->str, '%');
-		conversion = search_conversion(percent);
-		if (!(percent && conversion))
+		if (percent)
+			conversion = search_conversion(percent + 1);
+		if (!percent)
 		{
-			f_str->print_len += write(1, f_str->str, fs_strlen(f_str->str));
+			f_str->print_len += write(1, f_str->str, ft_strlen(f_str->str));
 			return ;
 		}
+		else if (!conversion && no_conversion(f_str))
+			return ;
 		else
 		{
 			f_str->print_len += write(1, f_str->str, percent - f_str->str);
@@ -939,6 +954,8 @@ void parser(t_fs *f_str)
 			get_width(f_str, format);
 			get_precision(f_str, format);
 			get_modifiers(f_str, format);
+			f_str->str = conversion;
+			parse_conversion(f_str, *conversion);
 			free (format);
 		}
 	}

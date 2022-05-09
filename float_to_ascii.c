@@ -51,23 +51,24 @@ void set_precision_for_rounding_dir(t_fs *f_str, int *precision)
 int rounding_direction(t_fs *f_str, long double f, int *for_bankers)
 {
     int precision;
-    long double exp;
+    long double f_temp;
+    unsigned long long nb;
     
+    precision = 0;
     set_precision_for_rounding_dir(f_str, &precision);
     normalizer(&precision, &f);
-    exp = ten_raised_to_n(f_str->precision); 
-    while (precision) 
+    while (precision > 0) 
     {
-        f -= (int)f;
+        f -= (unsigned long long)f;
         f *= 10;
         if (precision == 1)
             *for_bankers = (int)f;
         --precision;
     }
-    f -= (int)f;
-    if (f < 0.5)
+    f -= (unsigned long long)f;
+    if (f < (long double)0.5)
         return (-1);
-    else if (f == 0.5)
+    else if (f == (long double)0.5)
         return (0);
     return (1);
 }
@@ -160,15 +161,17 @@ void whole_part(t_fs *f_str, long double *f, char *nb, int *i)
 void fractional_part(t_fs *f_str, long double *f, char *nb, int *i)
 {
     int precision;
-    unsigned long long digit;
+    long long digit;
+    long double flt;
 
+    flt = *f;
     precision = f_str->precision;
     while (precision > 0)
     {
-        digit = *f;
+        digit = (long long)flt;
         nb[(*i)++] = digit + '0';
-        *f -= digit;
-        *f *= 10;
+        flt -= digit;
+        flt *= 10;
         --precision;
     }
 }
@@ -200,8 +203,8 @@ void create_output(t_fs *f_str, char *nb, unsigned int nb_len)
     }
     else
         ft_memcpy(out, nb, nb_len);
-    set_prefix(f_str, out, nb_len); 
-    write(1, out, f_str->width);
+    set_prefix(f_str, out, nb_len - 1); 
+    f_str->print_len += write(1, out, f_str->width);
 }
 
 void print_float(t_fs *f_str, long double f)
@@ -258,7 +261,7 @@ void float_to_ascii(t_fs *f_str)
     if (f_str->modifier & LDBL)
         f = (long double)va_arg(f_str->argcs, long double);
     else 
-        f = va_arg(f_str->argcs, double);
+        f = (double)va_arg(f_str->argcs, double);
     /*Check negativity */
     if (1 / f < 0)
     {
