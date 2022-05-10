@@ -98,7 +98,7 @@ void get_flags(t_fs *f_str, char *fs)
 		*flags |= HASH;
 	if (ft_strchr(fs, '-'))
 		*flags |= MINUS;
-	if (ft_strchr(fs, '0') && !ft_isdigit(*(ft_strchr(fs, '0') - 1)))
+	if (ft_strchr(fs, '0') && !(ft_isdigit(*(ft_strchr(fs, '0') - 1))) && *(ft_strchr(fs, '0') - 1) != '.')
 		*flags |= ZERO;
 	if (ft_strchr(fs, '+'))
 		*flags |= PLUS;
@@ -290,9 +290,9 @@ void set_prefix(t_fs *f_str, char *out, unsigned int nb_len)
 	int f;
 	char prefix;
 
-	if (*f_str->str == 'f')
-		f_str->precision = nb_len;
 	f = f_str->flags;
+	if (*f_str->str == 'f')
+		f_str->precision = nb_len; 
 	if (f_str->neg)
 		prefix = '-';
 	else if (f & PLUS)
@@ -305,6 +305,8 @@ void set_prefix(t_fs *f_str, char *out, unsigned int nb_len)
 		f_str->precision = f_str->width - 1;
 	if ((f & MINUS))
 		*out = prefix;	
+	else if (*f_str->str == 'f' && f & ZERO && !(f & MINUS))
+		*(out + f_str->width - f_str->precision) = prefix; // nb_len - 1 changed to - precision
 	else
 		*(out + f_str->width - f_str->precision - 1) = prefix; // nb_len - 1 changed to - precision
 }
@@ -346,7 +348,13 @@ int zero_case(t_fs *f_str, unsigned long long ull)
 {
 	if (ull == 0 && f_str->is_precision && f_str->precision == 0)
 	{
-		f_str->print_len += print_spaces(f_str->width);	
+		if (f_str->flags & PLUS)
+		{
+			f_str->print_len += print_spaces(f_str->width - 1);	
+			f_str->print_len += write(1, "+", 1);
+		}
+		else
+			f_str->print_len += print_spaces(f_str->width);	
 		++f_str->str;
 		return (1);
 	}
@@ -517,9 +525,14 @@ void itootoa(t_fs *f_str, unsigned long long ull)
 	int width;
 	int precision;
 
-	if (zero_case(f_str, ull))
+	if (ull == 0 && f_str->is_precision && f_str->precision == 0)
 	{
 		if (f_str->flags & HASH)
+			f_str->width -= 1;
+		if (f_str->flags & HASH && f_str->flags & MINUS)
+			f_str->print_len += print_zeroes(1);
+		zero_case(f_str, ull);
+		if (f_str->flags & HASH && !(f_str->flags & MINUS))
 			f_str->print_len += print_zeroes(1);
 		return ;
 	}
@@ -541,7 +554,7 @@ void itootoa(t_fs *f_str, unsigned long long ull)
 		if (ull > 0)
 			f_str->print_len += print_zeroes(f_str->precision - len);
 		else if (ull == 0 && f_str->precision > 0)
-			f_str->print_len += print_zeroes(f_str->precision - len);
+			f_str->print_len += print_zeroes(f_str->precision - len + 1);
 		if (ull > 0)
 			f_str->print_len += octal_print(ull);
 		f_str->print_len += print_spaces(f_str->width - f_str->precision);
@@ -627,15 +640,14 @@ void right_adjusted_hexa(t_fs *fs, unsigned long long ull, int len)
 {
 	if (fs->is_precision && fs->precision > 0)
 	{
+		if (fs->flags & HASH)
+			fs->width -= 2;
 		if (fs->precision > len)
 			fs->print_len += print_spaces(fs->width - fs->precision);
 		else
 			fs->print_len += print_spaces(fs->width - len);
 		if (fs->flags & HASH && ull > 0)
-		{
 			put_hexa_prefix(fs);	
-			//len += 2;
-		}
 		fs->print_len += print_zeroes(fs->precision - len);
 	}
 	else if (!fs->is_precision)

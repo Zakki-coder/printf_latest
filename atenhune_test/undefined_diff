@@ -1,33 +1,33 @@
-%llllllld						      |	9223372036854775807
-%llllllld						      |	0
-%llllhhhhllld						      |	0
-%+0llllllld						      |	+0
-%+0llllllld						      |	+0
-%+0llllllld						      |	+0
-%+0llllllld						      |	+0
-%+0llllllld						      |	+0
-%+0llllllld						      |	+123
-%#+0lllllllu						      |	+23
-%#+0lllllll						      |	%++++++#+ 00000lllllllll
+9223372036854775807						9223372036854775807
+0								0
+0								0
++0								+0
++0								+0
++0								+0
++0								+0
++0								+0
++123								+123
+123							      |	+23
+							      <
 MORO        							MORO        
 MORO        							MORO        
-(null)      						      |	(null)
-%-12							      |	%0-12
-%-12							      |	%0-12
-%							      |	%0-12%
-%%								%%
-123							      /	123
-0x7b							      <
-0X7B							      <
+(null)      							(null)      
+							      |	%           
+           						      |	%123
+           %           					      <
+%							      <
 123							      <
-0173							      <
-%#+  o							      <
-%#+  x							      <
-%#+  X							      <
-%#+j  o							      <
-%#+12  z-j12  o						      <
-123  							      <
-123							      <
-123  							      <
-%-5hhhhhhhhhllhlhlhlhd					      <
-%-5hhhhhhhzzjjjlhlhlhd					      <
+0x7b								0x7b
+0X7B								0X7B
+123								123
+0173								0173
+0173								0173
+0x7b								0x7b
+0X7B								0X7B
+0173								0173
+0173        							0173        
+123  								123  
+123								123
+123  								123  
+123  								123  
+123  								123  

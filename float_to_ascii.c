@@ -57,6 +57,8 @@ int rounding_direction(t_fs *f_str, long double f, int *for_bankers)
     precision = 0;
     set_precision_for_rounding_dir(f_str, &precision);
     normalizer(&precision, &f);
+    if (precision == 0)
+        *for_bankers = (int)f;
     while (precision > 0) 
     {
         f -= (unsigned long long)f;
@@ -66,9 +68,9 @@ int rounding_direction(t_fs *f_str, long double f, int *for_bankers)
         --precision;
     }
     f -= (unsigned long long)f;
-    if (f < (long double)0.5)
+    if (f < 0.5)
         return (-1);
-    else if (f == (long double)0.5)
+    else if ((float)f == (float)0.5)
         return (0);
     return (1);
 }
@@ -108,9 +110,7 @@ long double divide_five_with_ten_n(int precision)
 
 long double round_bankers(int precision, long double f, int next_to_last)
 {
-    if (next_to_last % 2 == 0)
-        ;/* Just cut after precision when even? */
-    else
+    if (next_to_last % 2 != 0 || (next_to_last == 0 && precision > 0))
         f += divide_one_with_ten_n(precision);
     return(f);
 }
@@ -185,11 +185,7 @@ void fractional_part(t_fs *f_str, long double *f, char *nb, int *i)
 void create_output(t_fs *f_str, char *nb, unsigned int nb_len)
 {
     char            *out;
-    unsigned int    starts_with_zero;
 
-    starts_with_zero = 0;
-    if (*nb == '0')
-        starts_with_zero = 1;
     out = ft_memalloc(sizeof(char) * f_str->width);
     if (out == NULL)
         exit(-1);
@@ -198,12 +194,15 @@ void create_output(t_fs *f_str, char *nb, unsigned int nb_len)
     if (!(f_str->flags & MINUS))
     {
         if (f_str->flags & ZERO)
-            ft_memset(out + has_prefix(f_str), '0', f_str->width + has_prefix(f_str));
-        ft_memcpy(out + (f_str->width - nb_len + has_prefix(f_str)), nb, nb_len);
+            ft_memset(out + has_prefix(f_str), '0', f_str->width);
+        ft_memcpy(out + (f_str->width - nb_len) + has_prefix(f_str), nb, nb_len);
     }
     else
-        ft_memcpy(out, nb, nb_len);
-    set_prefix(f_str, out, nb_len - 1); 
+        ft_memcpy(out + has_prefix(f_str), nb, nb_len - has_prefix(f_str));
+    if (!(f_str->flags & ZERO))
+        set_prefix(f_str, out, nb_len - 1); 
+    else
+        set_prefix(f_str, out, f_str->width); 
     f_str->print_len += write(1, out, f_str->width);
 }
 
