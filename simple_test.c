@@ -227,15 +227,20 @@ void test_percent()
 	//res = printf("%%%5d\n", 3);
 	//res2 = ft_printf("%%%5d\n", 3);
 	//printf("correct: %d yours: %d\n", res, res2);	
-//	printf("%5%\n");
-//	ft_printf("%5%\n");
-//	ft_printf("%10x", 42);
-//	printf("%-5%\n");
-//	ft_printf("%-5%\n");
+	printf("|%5%|\n");
+	ft_printf("|%5%|\n");
+	printf("|%-5%|\n");
+	ft_printf("|%-5%|\n");
 	printf("|%% % %%|\n", "test");
 	ft_printf("|%% % %%|\n", "test");
 	printf("|%%  %%|\n", "test");
 	ft_printf("|%%  %%|\n", "test");
+	printf("|%%   %|\n", "test");
+	ft_printf("|%%   %|\n", "test");
+	printf("|%%  %-%|\n", "test");
+	ft_printf("|%%  %-%|\n", "test");
+	printf("%%d 0000042 == |%d|\n", 0000042);
+	ft_printf("%%d 0000042 == |%d|\n", 0000042);
 }
 
 void test_interesting()

@@ -647,7 +647,7 @@ void right_adjusted_hexa(t_fs *fs, unsigned long long ull, int len)
 {
 	if (fs->is_precision && fs->precision > 0)
 	{
-		if (fs->flags & HASH && !(fs->flags & ZERO))
+		if (fs->flags & HASH /*&& !(fs->flags & ZERO)*/)
 			fs->width -= 2;
 		if (fs->precision > len)
 			fs->print_len += print_spaces(fs->width - fs->precision);
@@ -833,11 +833,28 @@ void left_adjusted_percent(t_fs *f_str)
 	
 void right_adjusted_percent(t_fs *f_str)
 {
+	char *percent;
+	char *percent_temp;
+	int count;
+
+	count = 0;
 	if (f_str->flags & ZERO)
 		f_str->print_len += print_zeroes(f_str->width - 1);
 	else
 		f_str->print_len += print_spaces(f_str->width - 1);
 	putchar_and_count('%', f_str);	
+	percent = ft_strchr(f_str->str + 1, '%');
+	percent_temp = percent;
+	while (percent_temp)
+	{
+		percent_temp = ft_strchr(percent_temp + 1, '%');
+		++count;
+	}
+	if (count == 1 && !search_conversion(percent))
+	{
+		f_str->print_len += write(1, f_str->str + 1, percent - f_str->str - 1);
+		f_str->str = percent;
+	}
 }
 
 void put_percent(t_fs *f_str)
@@ -953,34 +970,18 @@ void parser(t_fs *f_str)
 			f_str->str = conversion + 1;
 		percent = ft_strchr(f_str->str, '%');
 		if (percent)
-		{
 			conversion = search_conversion(percent + 1);
-			if (conversion && *conversion == '%')
-			{
-				f_str->print_len += write(1, f_str->str, percent - f_str->str);
-				f_str->print_len += write(1, "%", 1);
-				f_str->str = conversion + 1;
-				percent = ft_strchr(f_str->str, '%');
-				if (percent)
-				{
-					f_str->print_len += write(1, f_str->str, percent - f_str->str);
-					f_str->str = percent + 1;
-					conversion = search_conversion(percent + 1);
-					if (!conversion)
-						f_str->print_len += write(1, f_str->str, ft_strlen(f_str->str));
-				}
-			}
-			else if (!conversion)
-				f_str->print_len += write(1, percent + 1, ft_strlen(percent + 1));
-		}
 		if (!percent)
 		{
 			f_str->print_len += write(1, f_str->str, ft_strlen(f_str->str));
 			return ;
 		}
 		else if (!conversion && no_conversion(f_str))
+		{
+			f_str->print_len += write(1, percent + 1, ft_strlen(percent + 1));
 			return ;
-		else if (percent && conversion)
+		}
+		else
 		{
 			f_str->print_len += write(1, f_str->str, percent - f_str->str);
 			format = (char *)ft_memalloc(sizeof(*format) * (conversion - percent) + 1);
