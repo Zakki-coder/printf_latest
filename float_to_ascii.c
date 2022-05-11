@@ -27,12 +27,13 @@ unsigned int len_to_first_digit(long double f)
     return (len);
 }
 
-void normalizer(int *precision, long double *f)
+long double normalizer(int *precision, long double f)
 {
     unsigned int decimal_place;
 
-    decimal_place = len_to_first_digit(*f);
-    *f /= ten_raised_to_n(decimal_place);
+    decimal_place = len_to_first_digit(f);
+    f /= ten_raised_to_n(decimal_place);
+    return (f);
     *precision += decimal_place;
 }
 
@@ -48,6 +49,21 @@ void set_precision_for_rounding_dir(t_fs *f_str, int *precision)
     }
 }
 
+int get_digit_before_decimal(long double f)
+{
+    unsigned long long nb;
+
+    nb = f;
+    if (nb > 10)
+    {
+        nb /= 10;
+        nb *= 10;
+        nb = (unsigned long long)f - nb;
+        return((int)nb);
+    }
+    return ((int)f);
+}
+
 int rounding_direction(t_fs *f_str, long double f, int *for_bankers)
 {
     int precision;
@@ -56,9 +72,8 @@ int rounding_direction(t_fs *f_str, long double f, int *for_bankers)
     
     precision = 0;
     set_precision_for_rounding_dir(f_str, &precision);
-    normalizer(&precision, &f);
     if (precision == 0)
-        *for_bankers = (int)f;
+        *for_bankers = get_digit_before_decimal(f);
     while (precision > 0) 
     {
         f -= (unsigned long long)f;
@@ -70,7 +85,7 @@ int rounding_direction(t_fs *f_str, long double f, int *for_bankers)
     f -= (unsigned long long)f;
     if (f < 0.5)
         return (-1);
-    else if ((float)f == (float)0.5)
+    else if (f == (double)0.5)
         return (0);
     return (1);
 }
@@ -246,6 +261,7 @@ long double rounder(t_fs *f_str, long double f)
     int for_bankers;
 
     direction = rounding_direction(f_str, f, &for_bankers);
+//    normalizer(&f_str->precision, f);
     if (direction == 1)
         return(round_up_float(f_str->precision, f));
     else if (direction == 0)

@@ -229,10 +229,13 @@ void test_percent()
 	//printf("correct: %d yours: %d\n", res, res2);	
 //	printf("%5%\n");
 //	ft_printf("%5%\n");
-	ft_printf("%10x", 42);
+//	ft_printf("%10x", 42);
 //	printf("%-5%\n");
 //	ft_printf("%-5%\n");
-
+	printf("|%% % %%|\n", "test");
+	ft_printf("|%% % %%|\n", "test");
+	printf("|%%  %%|\n", "test");
+	ft_printf("|%%  %%|\n", "test");
 }
 
 void test_interesting()
@@ -468,10 +471,14 @@ void single_float()
 //	ft_printf("%.3f\n", -0.0005000);
 //	printf("%15.0f\n", 42.42);
 //	ft_printf("%15.0f\n", 42.42);
-	printf("Lf conversion: %Lf\n", 2.5555525L);
-	ft_printf("Lf conversion: %Lf\n", 2.5555525L);
+//	printf("Lf conversion: %Lf\n", 2.5555525L);
+//	ft_printf("Lf conversion: %Lf\n", 2.5555525L);
+//	printf("%.2f\n",958.125000);
+//	ft_printf("%.2f\n",958.125000);
 //	printf("Lf conversion: %Lf\n", 2.5555535L);
 //	ft_printf("Lf conversion: %Lf\n", 2.5555535L);
+//	printf("%0#30.5x\n", 0);
+//	ft_printf("%0#30.5x\n", 0);
 
 }
 
@@ -680,10 +687,10 @@ int main(void)
 //	test_octal_len();
 //	test_print_octal();
 /*	copy tests from percent and interesting to automatic test file NOW */
-//	test_percent();
+	test_percent();
 //	test_interesting();
 //	test_rounder();
-	single_float();
+//	single_float();
 //	test_long_double();
 //	test_str();
 //	float_play();
