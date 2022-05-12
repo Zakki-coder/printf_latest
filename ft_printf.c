@@ -252,10 +252,10 @@ void handle_width(t_fs *f_str, int len)
 	if (len > f_str->width)
 		f_str->width = len;
 	if (f_str->precision > f_str->width)
-		f_str->width = f_str->precision; //Behaves differently with float
+		f_str->width = f_str->precision;
 	if (len == f_str->width && has_prefix(f_str))
 		if ((*f_str->str == 'd' || *f_str->str == 'i')
-		&& f_str->width < MAX_INT) //At least on linux this is the limit.
+		&& f_str->width < MAX_INT)
 			++f_str->width;
 	if ((!(f & MINUS)) && has_prefix(f_str) && f_str->precision == f_str->width)
 		++f_str->width;
@@ -368,6 +368,24 @@ int zero_case(t_fs *f_str, unsigned long long ull)
 	return (0);
 }
 
+void switch_off_flags(t_fs *f_str, long long ll)
+{
+	if (*f_str->str == 'u')
+	{
+		if (f_str->flags & PLUS)
+			f_str->flags ^= PLUS;  
+		if (f_str->flags & SPACE)
+			f_str->flags ^= SPACE;  
+	}
+	if (ll == 0)
+	{
+//		if (f_str->flags & PLUS)
+//			f_str->flags ^= PLUS;  
+//		if (!(f_str->is_precision))
+//			f_str->flags |= SPACE;  
+	}
+}
+
 //Precision guarantees the number of digits, so if there is precision and prefix, then +1 width
 void itodiutoa(t_fs *f_str, long long ll)
 {
@@ -378,20 +396,21 @@ void itodiutoa(t_fs *f_str, long long ll)
 	/* Zero case hasnt been tested */	
 	if (zero_case(f_str, ll))
 		return ;
+	switch_off_flags(f_str, ll);
 	ull = convert_from_negativity(f_str, ll);
 	len = nb_length(ull);
 	handle_width(f_str, len); //Remember to free
 	if (f_str->precision < len)
 		f_str->precision = len;
 	prefix = f_str->width - len;
-	out = (char *)ft_memalloc(sizeof(*out) * f_str->width + 1);
+	out = (char *)ft_memalloc(sizeof(*out) * f_str->width + 1); // WHY +1?? Later using just width?
 	if (out == NULL)
 		exit (-1);
 	ft_memset(out, ' ', f_str->width);
 	if (f_str->flags & MINUS)
 	{
 		prefix = 0;
-		if  (ll < 0 || f_str->flags & PLUS || f_str->flags & SPACE)
+		if (ll < 0 || f_str->flags & PLUS || f_str->flags & SPACE)
 			prefix = 1;
 		if (f_str->precision - len > 0)
 		{

@@ -117,6 +117,44 @@ void test_d_i()
 //	ft_printf("%#10d\n", 42);
 //	printf("%010d\n", 42);
 //	printf("%#010d\n", 42);
+//	printf("%+7u\n", 0);
+//	ft_printf("%+7u\n", 0);
+//	printf("% 7u\n", 0);
+//	ft_printf("% 7u\n", 0);
+//	printf("%7u\n", -0);
+//	ft_printf("%7u\n", -0);
+//	printf("%+-.18u\n", 2147483647);
+//	ft_printf("%+-.18u\n", 2147483647);
+//	printf("%+.18u\n", 2147483647);
+//	ft_printf("%+.18u\n", 2147483647);
+//	printf("%+18u\n", 2147483647);
+//	ft_printf("%+18u\n", 2147483647);
+//	printf("%+18u\n", -2147483647);
+//	ft_printf("%+18u\n", -2147483647);
+//	printf("%#18u\n", -2147483647);
+//	ft_printf("%#18u\n", -2147483647);
+//	printf("% -.18u\n", 2147483647);
+//	ft_printf("% -.18u\n", 2147483647);
+//	printf("% -.11u\n", 2147483647);
+//	ft_printf("% -.11u\n", 2147483647);
+//	printf("% -.10u\n", 2147483647);
+//	ft_printf("% -.10u\n", 2147483647);
+//	printf("% -u\n", 2147483647);
+//	ft_printf("% -u\n", 2147483647);
+	printf("%+d\n", 0);
+	ft_printf("%+d\n", 0);
+//	printf("% d\n", 0);
+//	ft_printf("% d\n", 0);
+//	printf("%+-.18ld\n", 1);
+//	ft_printf("%+-.18ld\n", 1);
+//	printf("%.1d\n", 0);
+//	ft_printf("%.1d\n", 0);
+//	printf("%.5d\n", 0);
+//	ft_printf("%.5d\n", 0);
+//	printf("%d\n", 0);
+//	ft_printf("%d\n", 0);
+	printf("%+7hd\n", 0);
+	ft_printf("%+7hd\n", 0);
 }
 
 void test_x()
@@ -578,11 +616,11 @@ void test_str()
 //	ft_printf("|%|\n", "KissaKoira");
 //	printf("|%1|\n", "KissaKoira");
 //	ft_printf("|%1|\n", "KissaKoira");
-//	printf("|%s|\n", NULL);
-//	ft_printf("|%s|\n", NULL);
-//	res1 = printf("%32s\n", NULL);
-//	res2 = ft_printf("%32s\n", NULL);
-//	printf("res1: %d res2: %d\n", res1, res2);
+///	printf("|%s|\n", NULL);
+///	ft_printf("|%s|\n", NULL);
+///	res1 = printf("%32s\n", NULL);
+///	res2 = ft_printf("%32s\n", NULL);
+///	printf("res1: %d res2: %d\n", res1, res2);
 //	printf("%*.*s\n", 10, 2, "lol");
 //	ft_printf("%*.*s\n", 10, 2, "lol");
 //	printf("%10.1s\n", "kuokka");
@@ -591,8 +629,14 @@ void test_str()
 //	ft_printf("{%.*s}\n", 0, "42");
 //	ft_printf("|%-+10.4s|", "Halloo");
 //	ft_printf("%s is a string", "this");
-	printf("%4.15s\n", "42");
-	ft_printf("%4.15s\n", "42");
+//	printf("%4.15s\n", "42");
+//	ft_printf("%4.15s\n", "42");
+//	printf("%010s\n", NULL);
+//	ft_printf("%010s\n", NULL);
+//	printf("%010.0s\n", NULL);
+//	ft_printf("%010.0s\n", NULL);
+	printf("%s%s\n", "|| ", "0");
+	ft_printf("%s%s\n", "|| ", "0");
 }
 
 void test_char()
@@ -656,8 +700,34 @@ void test_ptr()
 //	printf("{%-15p}\n", 0);
 //	ft_printf("{%-15p}\n", 0);
 	char *a1;
-	printf("|%-70p|\n", &a1);
-	ft_printf("|%-70p|\n", &a1);
+//	printf("|%-70p|\n", &a1);
+//	ft_printf("|%-70p|\n", &a1);
+	printf("%010p\n", 0x0);
+	ft_printf("%010p\n", 0x0);
+	printf("%010.5p\n", 0x0);
+	ft_printf("%010.5p\n", 0x0);
+	printf("%010.9p\n", 0x0);
+	ft_printf("%010.9p\n", 0x0);
+	printf("%010.10p\n", 0x0);
+	ft_printf("%010.10p\n", 0x0);
+	printf("%010.11p\n", 0x0);
+	ft_printf("%010.11p\n", 0x0);
+	printf("%10.10p\n", 0x0);
+	ft_printf("%10.10p\n", 0x0);
+	printf("%10p\n", 0x0);
+	ft_printf("%10p\n", 0x0);
+
+	printf("%010p\n", 0x1);
+	ft_printf("%010p\n", 0x1);
+	printf("%010.5p\n", 0x1);
+	ft_printf("%010.5p\n", 0x1);
+	printf("%010.9p\n", 0x1);
+	ft_printf("%010.9p\n", 0x1);
+	printf("%010.10p\n", 0x1);
+	ft_printf("%010.10p\n", 0x1);
+	printf("%010.11p\n", 0x1);
+	ft_printf("%010.11p\n", 0x1);
+
 }
 
 void test_minus()
@@ -686,13 +756,13 @@ int main(void)
 //	test_get_precision();
 //	test_get_modifiers();	
 //	how_convers();
-//	test_d_i();
+	test_d_i();
 //	test_x();
 //	wtf();
 //	test_octal_len();
 //	test_print_octal();
 /*	copy tests from percent and interesting to automatic test file NOW */
-	test_percent();
+//	test_percent();
 //	test_interesting();
 //	test_rounder();
 //	single_float();

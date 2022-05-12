@@ -12,9 +12,19 @@ int null_string(t_fs *f_str)
         else
         {
             if (f_str->is_precision)
-                f_str->print_len += ft_printf("%*.*s", f_str->width, f_str->precision, "(null)");
+            {
+                if (f_str->flags & ZERO)
+                    f_str->print_len += ft_printf("%0*.*s", f_str->width, f_str->precision, "(null)");
+                else
+                    f_str->print_len += ft_printf("%*.*s", f_str->width, f_str->precision, "(null)");
+            }
             else
-                f_str->print_len += ft_printf("%*s", f_str->width, "(null)");
+            {
+                if (f_str->flags & ZERO)
+                    f_str->print_len += ft_printf("%0*s", f_str->width, "(null)");
+                else
+                    f_str->print_len += ft_printf("%*s", f_str->width, "(null)");
+            }
         }
         ++f_str->str;
         return (1);
@@ -97,14 +107,29 @@ void put_pointer_address(t_fs *f_str)
     unsigned long long address;
     void *void_argument;
     int len;
+    int precision_temp;
 
     void_argument = va_arg(f_str->argcs, void *);
     address = (unsigned long long)void_argument;
     len = hexa_len(f_str, address);
-    if (!(f_str->flags & MINUS))
-        f_str->print_len += print_spaces(f_str->width - len - 2);
+    precision_temp = f_str->precision;
+    if (!(f_str->flags & MINUS)/* && !(f_str->flags & ZERO)*/)
+    {
+        if (f_str->flags & ZERO)
+        {
+            if (!f_str->is_precision)
+                f_str->precision = f_str->width - 2; 
+            f_str->print_len += print_spaces(f_str->width - f_str->precision - 2);
+        }
+        else 
+        {
+            if (!(f_str->is_precision))
+                precision_temp = len;
+            f_str->print_len += print_spaces(f_str->width - precision_temp - 2);
+        }
+    }
     f_str->print_len += write(1, "0x", 2);
-    if (f_str->is_precision)
+    if (f_str->is_precision || f_str->flags & ZERO)
         f_str->print_len += print_zeroes(f_str->precision - len);
     if (address == 0 && (!(f_str->is_precision) || f_str->precision > 0))
             f_str->print_len += write(1, "0", 1);
