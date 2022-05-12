@@ -410,7 +410,7 @@ void itodiutoa(t_fs *f_str, long long ll)
 	if (f_str->flags & MINUS)
 	{
 		prefix = 0;
-		if (ll < 0 || f_str->flags & PLUS || f_str->flags & SPACE)
+		if (ll < (unsigned long long)0 || f_str->flags & PLUS || f_str->flags & SPACE || f_str->neg)
 			prefix = 1;
 		if (f_str->precision - len > 0)
 		{
@@ -836,9 +836,9 @@ unsigned long long get_argument_u(t_fs *f_str)
 	if (m & LDBL)
 		arg = va_arg(f_str->argcs, long double);//call get_ldbl, which gets the value How the original does it, is there SEGFAULT here?
 	else if (m & LLONG)
-		arg = va_arg(f_str->argcs, unsigned long long);
+		arg = va_arg(f_str->argcs, unsigned long long int);
 	else if (m & LONG)
-		arg = va_arg(f_str->argcs, unsigned long);
+		arg = va_arg(f_str->argcs, long int);
 	else
 		arg = va_arg(f_str->argcs, unsigned int);
 	return (arg);

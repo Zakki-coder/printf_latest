@@ -189,8 +189,14 @@ void test_x()
 //	ft_printf("|%-7x|\n", 33);
 //	printf("|%-8.3x|\n", 8375);
 //	ft_printf("|%-8.3x|\n", 8375);
-	printf("%#08.2X\n", 42);
-	ft_printf("%#08.2X\n", 42);
+//	printf("%#08.2X\n", 42);
+//	ft_printf("%#08.2X\n", 42);
+	res1 = printf("|%-10lu|\n", 18446744073709551615);
+	res2 = ft_printf("|%-10lu|\n", 18446744073709551615);
+//	printf("%-010lu\n", 4294967295);
+//	ft_printf("%-010lu\n", 4294967295);
+//	printf("%-010lu\n", 4294967295);
+//	ft_printf("%-010lu\n", 4294967295);
 }
 
 void wtf(void)
@@ -756,8 +762,8 @@ int main(void)
 //	test_get_precision();
 //	test_get_modifiers();	
 //	how_convers();
-	test_d_i();
-//	test_x();
+//	test_d_i();
+	test_x();
 //	wtf();
 //	test_octal_len();
 //	test_print_octal();
