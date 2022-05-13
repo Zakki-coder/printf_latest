@@ -1,142 +1,92 @@
-#include "includes/ft_printf.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   put_string.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jniemine <jniemine@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/05/13 15:12:13 by jniemine          #+#    #+#             */
+/*   Updated: 2022/05/13 16:32:20 by jniemine         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-int null_string(t_fs *f_str)
+#include "ft_printf.h"
+
+int	null_string(t_fs *fs, char *s)
 {
-        if (f_str->flags & MINUS)
-        {
-            if (f_str->is_precision)
-                f_str->print_len += ft_printf("%-*.*s", f_str->width, f_str->precision, "(null)");
-            else
-                f_str->print_len += ft_printf("%-*s", f_str->width, "(null)");
-        }
-        else
-        {
-            if (f_str->is_precision)
-            {
-                if (f_str->flags & ZERO)
-                    f_str->print_len += ft_printf("%0*.*s", f_str->width, f_str->precision, "(null)");
-                else
-                    f_str->print_len += ft_printf("%*.*s", f_str->width, f_str->precision, "(null)");
-            }
-            else
-            {
-                if (f_str->flags & ZERO)
-                    f_str->print_len += ft_printf("%0*s", f_str->width, "(null)");
-                else
-                    f_str->print_len += ft_printf("%*s", f_str->width, "(null)");
-            }
-        }
-        ++f_str->str;
-        return (1);
+	if (fs->flags & MINUS && fs->str++)
+	{
+		if (fs->is_precision)
+			fs->ret += ft_printf("%-*.*s", fs->width, fs->precision, s);
+		else
+			fs->ret += ft_printf("%-*s", fs->width, s);
+	}
+	else
+	{
+		if (fs->is_precision)
+		{
+			if (fs->flags & ZERO)
+				fs->ret += ft_printf("%0*.*s", fs->width, fs->precision, s);
+			else
+				fs->ret += ft_printf("%*.*s", fs->width, fs->precision, s);
+		}
+		else
+		{
+			if (fs->flags & ZERO)
+				fs->ret += ft_printf("%0*s", fs->width, s);
+			else
+				fs->ret += ft_printf("%*s", fs->width, s);
+		}
+	}
+	return (1);
 }
 
-void put_string(t_fs *f_str)
+void	put_string(t_fs *f_str)
 {
-    const char *str;
-    unsigned long long len;
+	const char			*str;
+	unsigned long long	len;
 
-    str = va_arg(f_str->argcs, const char *);
-    if (str == 0 && null_string(f_str))
-        return ;
-    len = ft_strlen(str);
-    if (f_str->precision < 0)
-        f_str->precision = 0;
-    if (f_str->is_precision && f_str->precision < len)
-        len = f_str->precision;
-    if (f_str->width > len && !(f_str->flags & MINUS))
-    {
-        if (f_str->flags & ZERO)
-            f_str->print_len += print_zeroes(f_str->width - len);
-        else
-           f_str->print_len += print_spaces(f_str->width - len);
-    }
-    f_str->print_len += write(1, str, len);
-    if (f_str->width > len && f_str->flags & MINUS)
-        f_str->print_len += print_spaces(f_str->width - len);
-    ++f_str->str;
-    /* TODO: with null or ?zero? print null symbol*/
-    /* Precision tells the number of chars*/
-    /* Width is width */
-    /* Minus flag is minus flag */
-    return ;
+	str = va_arg(f_str->argcs, const char *);
+	if (str == 0 && null_string(f_str, "(null)"))
+		return ;
+	len = ft_strlen(str);
+	if (f_str->precision < 0)
+		f_str->precision = 0;
+	if (f_str->is_precision && f_str->precision < len)
+		len = f_str->precision;
+	if (f_str->width > len && !(f_str->flags & MINUS))
+	{
+		if (f_str->flags & ZERO)
+			f_str->ret += print_zeroes(f_str->width - len);
+		else
+			f_str->ret += print_spaces(f_str->width - len);
+	}
+	f_str->ret += write(1, str, len);
+	if (f_str->width > len && f_str->flags & MINUS)
+		f_str->ret += print_spaces(f_str->width - len);
+	++f_str->str;
+	return ;
 }
 
-void put_character(t_fs *f_str)
+void	put_character(t_fs *f_str)
 {
-    unsigned char ch;
+	unsigned char	ch;
 
-    if (f_str->width >= 1)
-        f_str->width -= 1;
-    if (!(f_str->flags & MINUS))
-    {
-        if (f_str->flags & ZERO)
-            f_str->print_len += print_zeroes(f_str->width);
-        else
-            f_str->print_len += print_spaces(f_str->width);
-    }
-    ch = (unsigned char)va_arg(f_str->argcs, int); 
-    if (ch == 0)
-        f_str->print_len += write(1, "\0", 1);
-    else
-        f_str->print_len += write(1, &ch, 1);
-    if (f_str->flags & MINUS)
-        f_str->print_len += print_spaces(f_str->width);
-    ++f_str->str;
-}
-
-void itoxa_wrapper(t_fs *f_str, unsigned long long address)
-{
-    int precision;
-    int width;
-    int is_precision;
-    
-    precision = f_str->precision;
-    width = f_str->width;
-    is_precision = f_str->is_precision;
-    f_str->is_precision = 0;
-    f_str->width = 0;
-    f_str->precision = 0;
-    itoxa(f_str, address);
-    f_str->is_precision = is_precision;
-    f_str->width = width;
-    f_str->precision = precision;
-}
-
-void put_pointer_address(t_fs *f_str)
-{
-    unsigned long long address;
-    void *void_argument;
-    int len;
-    int precision_temp;
-
-    void_argument = va_arg(f_str->argcs, void *);
-    address = (unsigned long long)void_argument;
-    len = hexa_len(f_str, address);
-    precision_temp = f_str->precision;
-    if (!(f_str->flags & MINUS)/* && !(f_str->flags & ZERO)*/)
-    {
-        if (f_str->flags & ZERO)
-        {
-            if (!f_str->is_precision)
-                f_str->precision = f_str->width - 2; 
-            f_str->print_len += print_spaces(f_str->width - f_str->precision - 2);
-        }
-        else 
-        {
-            if (!(f_str->is_precision))
-                precision_temp = len;
-            f_str->print_len += print_spaces(f_str->width - precision_temp - 2);
-        }
-    }
-    f_str->print_len += write(1, "0x", 2);
-    if (f_str->is_precision || f_str->flags & ZERO)
-        f_str->print_len += print_zeroes(f_str->precision - len);
-    if (address == 0 && (!(f_str->is_precision) || f_str->precision > 0))
-            f_str->print_len += write(1, "0", 1);
-    if (address != 0)
-        itoxa_wrapper(f_str, address);
-    else
-        ++(f_str->str);
-    if (f_str->flags & MINUS)
-        f_str->print_len += print_spaces(f_str->width - len - 2);
+	if (f_str->width >= 1)
+		f_str->width -= 1;
+	if (!(f_str->flags & MINUS))
+	{
+		if (f_str->flags & ZERO)
+			f_str->ret += print_zeroes(f_str->width);
+		else
+			f_str->ret += print_spaces(f_str->width);
+	}
+	ch = (unsigned char)va_arg(f_str->argcs, int);
+	if (ch == 0)
+		f_str->ret += write(1, "\0", 1);
+	else
+		f_str->ret += write(1, &ch, 1);
+	if (f_str->flags & MINUS)
+		f_str->ret += print_spaces(f_str->width);
+	++f_str->str;
 }

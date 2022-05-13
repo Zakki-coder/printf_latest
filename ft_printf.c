@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_printf.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jniemine <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: jniemine <jniemine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/09 17:51:33 by jniemine          #+#    #+#             */
-/*   Updated: 2022/04/07 17:10:10 by jniemine         ###   ########.fr       */
+/*   Updated: 2022/05/13 16:31:19 by jniemine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ unsigned long long print_spaces(int len)
 
 void putchar_and_count(char c, t_fs *f_str)
 {
-	f_str->print_len += write (1, &c, 1);
+	f_str->ret += write (1, &c, 1);
 }
 
 void putchar_n(char c, unsigned long long n, t_fs *f_str)
@@ -40,7 +40,7 @@ void putchar_n(char c, unsigned long long n, t_fs *f_str)
 	i = 0;
 	while (i < n)
 	{
-		f_str->print_len += write(1, &c, 1);
+		f_str->ret += write(1, &c, 1);
 		++i;
 	}
 }
@@ -53,7 +53,7 @@ void multi_percent_handler(t_fs *f_str, const char *conversion, const char *perc
 	n = 0;
 	while (percent && conversion && *conversion == '%')
 	{
-		f_str->print_len += write(1, "%", 1);
+		f_str->ret += write(1, "%", 1);
 		f_str->str = conversion + 1;
 		percent = ft_strchr(f_str->str, '%');
 		conversion = search_conversion(f_str->str);
@@ -72,7 +72,7 @@ int print_chars(t_fs *f_str)
 	const char **str;
 	int n;
 
-	n = f_str->print_len;
+	n = f_str->ret;
 	str = &f_str->str;
 	while(**str != '\0')
 	{
@@ -337,7 +337,7 @@ unsigned long long convert_from_negativity(t_fs *f_str, long long ll)
 	unsigned long long ull;
 
 	ull = 0;
-	if (*f_str->str != 'u' && ll < 0)
+	if (is_signed(*f_str->str) && ll < 0)
 	{
 		f_str->neg = 1;
 		if (ll == -9223372036854775807 - 1)
@@ -357,11 +357,11 @@ int zero_case(t_fs *f_str, unsigned long long ull)
 	{
 		if (f_str->flags & PLUS)
 		{
-			f_str->print_len += print_spaces(f_str->width - 1);	
-			f_str->print_len += write(1, "+", 1);
+			f_str->ret += print_spaces(f_str->width - 1);	
+			f_str->ret += write(1, "+", 1);
 		}
 		else
-			f_str->print_len += print_spaces(f_str->width);	
+			f_str->ret += print_spaces(f_str->width);	
 		++f_str->str;
 		return (1);
 	}
@@ -426,7 +426,7 @@ void itodiutoa(t_fs *f_str, long long ll)
 	set_prefix(f_str, out, len);
 	if ((prefix + len) > f_str->width)
 		f_str->width = prefix + len;
-	f_str->print_len += write(1, out, f_str->width);
+	f_str->ret += write(1, out, f_str->width);
 	++f_str->str;
 	free(out);
 }
@@ -517,30 +517,30 @@ void right_adjusted_octal(t_fs *fs, unsigned long long ull, int len)
 	if (fs->precision > 0)
 	{
 		if (fs->precision > len)
-			fs->print_len += print_spaces(fs->width - fs->precision);
+			fs->ret += print_spaces(fs->width - fs->precision);
 		else
-			fs->print_len += print_spaces(fs->width - len);
+			fs->ret += print_spaces(fs->width - len);
 		if (ull == 0 || fs->flags & HASH)
-			fs->print_len += print_zeroes(1);
-		fs->print_len += print_zeroes(fs->precision - len);
+			fs->ret += print_zeroes(1);
+		fs->ret += print_zeroes(fs->precision - len);
 	}
 	else if (!fs->is_precision)
 	{			
 		if (!(fs->flags & ZERO))
-			fs->print_len += print_spaces(fs->width - fs->precision - len);
+			fs->ret += print_spaces(fs->width - fs->precision - len);
 		if (fs->flags & HASH)
-			fs->print_len += print_zeroes(1);
+			fs->ret += print_zeroes(1);
 		if (fs->flags & ZERO)
-			fs->print_len += print_zeroes(fs->width - len);
+			fs->ret += print_zeroes(fs->width - len);
 	}
 	else if (fs->is_precision)
 	{		
-		fs->print_len += print_spaces(fs->width - fs->precision - len);
+		fs->ret += print_spaces(fs->width - fs->precision - len);
 		if (fs->flags & HASH && ++len)
-			fs->print_len +=	print_zeroes(1);
+			fs->ret +=	print_zeroes(1);
 	}
 	if (ull > 0 || (ull == 0 && !fs->is_precision && !(fs->flags & HASH)))
-		fs->print_len += octal_print(ull);
+		fs->ret += octal_print(ull);
 }
 /* Number of zeroes = precision - number length. If number is nonzero.
  * If precision is not given and zero flag is on. Number of zeroes = width - number length
@@ -556,10 +556,10 @@ void itootoa(t_fs *f_str, unsigned long long ull)
 		if (f_str->flags & HASH)
 			f_str->width -= 1;
 		if (f_str->flags & HASH && f_str->flags & MINUS)
-			f_str->print_len += print_zeroes(1);
+			f_str->ret += print_zeroes(1);
 		zero_case(f_str, ull);
 		if (f_str->flags & HASH && !(f_str->flags & MINUS))
-			f_str->print_len += print_zeroes(1);
+			f_str->ret += print_zeroes(1);
 		return ;
 	}
 	width = f_str->width;
@@ -574,16 +574,16 @@ void itootoa(t_fs *f_str, unsigned long long ull)
 	{
 		/* With # prefix with zero, test with zero and 0 precision. */
 		if (f_str->flags & HASH)
-			f_str->print_len += print_zeroes(1);
+			f_str->ret += print_zeroes(1);
 		if (len > f_str->precision)
 			f_str->precision = len;
 		if (ull > 0)
-			f_str->print_len += print_zeroes(f_str->precision - len);
+			f_str->ret += print_zeroes(f_str->precision - len);
 		else if (ull == 0 && f_str->precision > 0)
-			f_str->print_len += print_zeroes(f_str->precision - len + 1);
+			f_str->ret += print_zeroes(f_str->precision - len + 1);
 		if (ull > 0)
-			f_str->print_len += octal_print(ull);
-		f_str->print_len += print_spaces(f_str->width - f_str->precision);
+			f_str->ret += octal_print(ull);
+		f_str->ret += print_spaces(f_str->width - f_str->precision);
 	}
 	++f_str->str;
 }
@@ -596,7 +596,9 @@ unsigned int hexa_len(t_fs *f_str, unsigned long long ull)
 {
 	char s[100];
 	int i;
+	unsigned long long zero;
 
+	zero = 0;
 	i = 0;
 	ft_bzero(s, 100);
 	if (ull == 0)
@@ -627,7 +629,7 @@ void put_hexa_prefix(t_fs *fs)
 			ft_putstr("0x");
 //		if (l_case == 'x')
 //			ft_putstr("0x");
-		fs->print_len += 2;
+		fs->ret += 2;
 //	}
 }
 
@@ -658,7 +660,7 @@ void hexa_print(t_fs *f_str, unsigned long long ull)
 		ull /= 16;
 		++i;
 	}
-	f_str->print_len += str_reverse(s);
+	f_str->ret += str_reverse(s);
 }
 /* Dont print prefix if ull == 0 and precision is given*/
 /* Prints too much spaces when hash is given 2 too much to be precise */
@@ -669,12 +671,12 @@ void right_adjusted_hexa(t_fs *fs, unsigned long long ull, int len)
 		if (fs->flags & HASH /*&& !(fs->flags & ZERO)*/)
 			fs->width -= 2;
 		if (fs->precision > len)
-			fs->print_len += print_spaces(fs->width - fs->precision);
+			fs->ret += print_spaces(fs->width - fs->precision);
 		else
-			fs->print_len += print_spaces(fs->width - len);
+			fs->ret += print_spaces(fs->width - len);
 		if (fs->flags & HASH && ull > 0)
 			put_hexa_prefix(fs);	
-		fs->print_len += print_zeroes(fs->precision - len);
+		fs->ret += print_zeroes(fs->precision - len);
 	}
 	else if (!fs->is_precision)
 	{			
@@ -682,7 +684,7 @@ void right_adjusted_hexa(t_fs *fs, unsigned long long ull, int len)
 		{
 			if (fs->flags & HASH)
 				len += 2;
-			fs->print_len += print_spaces(fs->width - len);
+			fs->ret += print_spaces(fs->width - len);
 		}
 		if (fs->flags & HASH && ull != 0)
 		{
@@ -690,13 +692,20 @@ void right_adjusted_hexa(t_fs *fs, unsigned long long ull, int len)
 			put_hexa_prefix(fs);
 		}
 		if (fs->flags & ZERO)
-			fs->print_len += print_zeroes(fs->width - len);
+			fs->ret += print_zeroes(fs->width - len);
 	}
 	else if (fs->is_precision)
 	{		
-		fs->print_len += print_spaces(fs->width - fs->precision - len);
-		if (fs->flags & HASH && ull > 0)
-			put_hexa_prefix(fs);
+		if (fs->flags & HASH/* && ull > 0*/)
+		{
+			len += 2;
+			fs->ret += print_spaces(fs->width - fs->precision - len);
+			if (ull > 0)
+				put_hexa_prefix(fs);
+		}
+		else
+			fs->ret += print_spaces(fs->width - fs->precision - len);
+
 	}
 	if (ull > 0 || ((ull == 0 && fs->precision > 0)))
 		hexa_print(fs, ull);
@@ -756,14 +765,14 @@ void itoxa(t_fs *f_str, long long nb)
 			put_hexa_prefix(f_str);
 			len += 2;
 		}
-		f_str->print_len += print_zeroes(f_str->precision - len);
+		f_str->ret += print_zeroes(f_str->precision - len);
 		hexa_print(f_str, nb);
 		if (len > f_str->precision)
 			f_str->precision = len;
 		if (f_str->is_precision)
-			f_str->print_len += print_spaces(f_str->width - f_str->precision);
+			f_str->ret += print_spaces(f_str->width - f_str->precision);
 		else
-			f_str->print_len += print_spaces(f_str->width - len);
+			f_str->ret += print_spaces(f_str->width - len);
 	}
 	++f_str->str;
 }
@@ -813,7 +822,7 @@ long long cast_to_modifier(t_fs *f_str, long long ll)
 	return((int)ll);//print_di(f_str, (int)ll);
 }
 	
-/* Never format string or argcs or print_len */
+/* Never format string or argcs or ret */
 void format_fs(t_fs *f_str)
 {
 	f_str->flags = 0;
@@ -847,7 +856,7 @@ unsigned long long get_argument_u(t_fs *f_str)
 void left_adjusted_percent(t_fs *f_str)
 {
 	putchar_and_count('%', f_str);	
-	f_str->print_len += print_spaces(f_str->width - 1);
+	f_str->ret += print_spaces(f_str->width - 1);
 }
 	
 void right_adjusted_percent(t_fs *f_str)
@@ -858,9 +867,9 @@ void right_adjusted_percent(t_fs *f_str)
 
 	count = 0;
 	if (f_str->flags & ZERO)
-		f_str->print_len += print_zeroes(f_str->width - 1);
+		f_str->ret += print_zeroes(f_str->width - 1);
 	else
-		f_str->print_len += print_spaces(f_str->width - 1);
+		f_str->ret += print_spaces(f_str->width - 1);
 	putchar_and_count('%', f_str);	
 	percent = ft_strchr(f_str->str + 1, '%');
 	percent_temp = percent;
@@ -871,7 +880,7 @@ void right_adjusted_percent(t_fs *f_str)
 	}
 	if (count == 1 && !search_conversion(percent))
 	{
-		f_str->print_len += write(1, f_str->str + 1, percent - f_str->str - 1);
+		f_str->ret += write(1, f_str->str + 1, percent - f_str->str - 1);
 		f_str->str = percent;
 	}
 }
@@ -992,17 +1001,17 @@ void parser(t_fs *f_str)
 			conversion = search_conversion(percent + 1);
 		if (!percent)
 		{
-			f_str->print_len += write(1, f_str->str, ft_strlen(f_str->str));
+			f_str->ret += write(1, f_str->str, ft_strlen(f_str->str));
 			return ;
 		}
 		else if (!conversion && no_conversion(f_str))
 		{
-			f_str->print_len += write(1, percent + 1, ft_strlen(percent + 1));
+			f_str->ret += write(1, percent + 1, ft_strlen(percent + 1));
 			return ;
 		}
 		else
 		{
-			f_str->print_len += write(1, f_str->str, percent - f_str->str);
+			f_str->ret += write(1, f_str->str, percent - f_str->str);
 			format = (char *)ft_memalloc(sizeof(*format) * (conversion - percent) + 1);
 			if (format == NULL) //FREE
 				exit(-1);
@@ -1046,10 +1055,10 @@ int	ft_printf(const char *str, ...)
 	t_fs	f_str;
 
 	format_fs(&f_str);
-	f_str.print_len = 0;
+	f_str.ret = 0;
 	f_str.str = str;
 	va_start(f_str.argcs, str);
 	parser(&f_str);
 	va_end(f_str.argcs);
-	return(f_str.print_len);
+	return(f_str.ret);
 }

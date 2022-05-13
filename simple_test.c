@@ -191,12 +191,16 @@ void test_x()
 //	ft_printf("|%-8.3x|\n", 8375);
 //	printf("%#08.2X\n", 42);
 //	ft_printf("%#08.2X\n", 42);
-	res1 = printf("|%-10lu|\n", 18446744073709551615);
-	res2 = ft_printf("|%-10lu|\n", 18446744073709551615);
+//	res1 = printf("|%-10lu|\n", 18446744073709551615);
+//	res2 = ft_printf("|%-10lu|\n", 18446744073709551615);
 //	printf("%-010lu\n", 4294967295);
 //	ft_printf("%-010lu\n", 4294967295);
 //	printf("%-010lu\n", 4294967295);
 //	ft_printf("%-010lu\n", 4294967295);
+//	printf("|%#010.0x|\n", 1);
+//	ft_printf("|%#010.0x|\n", 1);
+	printf("%10lx\n", 0xffffffffffffffff);
+	ft_printf("%10lx\n", 0xffffffffffffffff);
 }
 
 void wtf(void)
@@ -419,6 +423,7 @@ typedef union u_dbltoull
 void single_float()
 {
 	t_dbltoull data;
+	int res1, res2;
 	double input = 7.99999067386341522478687693364918231964111328125;
 
 	/* This number tests for edge case on bankers rounding, if number would be 0.15 and bankers would be adding 0.05 instead of 0.1 then breaks.*/
@@ -637,12 +642,14 @@ void test_str()
 //	ft_printf("%s is a string", "this");
 //	printf("%4.15s\n", "42");
 //	ft_printf("%4.15s\n", "42");
-//	printf("%010s\n", NULL);
-//	ft_printf("%010s\n", NULL);
-//	printf("%010.0s\n", NULL);
-//	ft_printf("%010.0s\n", NULL);
-	printf("%s%s\n", "|| ", "0");
-	ft_printf("%s%s\n", "|| ", "0");
+	printf("%010s\n", NULL);
+	ft_printf("%010s\n", NULL);
+	printf("%010.0s\n", NULL);
+	ft_printf("%010.0s\n", NULL);
+//	printf("%s%s\n", "|| ", "0");
+//	ft_printf("%s%s\n", "|| ", "0");
+	printf("|%8.4s|\n", NULL);
+	ft_printf("|%8.4s|\n", NULL);
 }
 
 void test_char()
@@ -706,8 +713,8 @@ void test_ptr()
 //	printf("{%-15p}\n", 0);
 //	ft_printf("{%-15p}\n", 0);
 	char *a1;
-//	printf("|%-70p|\n", &a1);
-//	ft_printf("|%-70p|\n", &a1);
+	printf("|%-70p|\n", &a1);
+	ft_printf("|%-70p|\n", &a1);
 	printf("%010p\n", 0x0);
 	ft_printf("%010p\n", 0x0);
 	printf("%010.5p\n", 0x0);
@@ -733,6 +740,8 @@ void test_ptr()
 	ft_printf("%010.10p\n", 0x1);
 	printf("%010.11p\n", 0x1);
 	ft_printf("%010.11p\n", 0x1);
+	printf("%9.2p\n", 1234);
+	ft_printf("%9.2p\n", 1234);
 
 }
 
@@ -763,7 +772,7 @@ int main(void)
 //	test_get_modifiers();	
 //	how_convers();
 //	test_d_i();
-	test_x();
+//	test_x();
 //	wtf();
 //	test_octal_len();
 //	test_print_octal();
@@ -773,7 +782,7 @@ int main(void)
 //	test_rounder();
 //	single_float();
 //	test_long_double();
-//	test_str();
+	test_str();
 //	float_play();
 //	test_char();
 //	test_ptr();

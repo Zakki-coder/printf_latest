@@ -6,7 +6,7 @@
 /*   By: jniemine <jniemine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/14 15:15:00 by jniemine          #+#    #+#             */
-/*   Updated: 2022/04/27 14:40:03 by jniemine         ###   ########.fr       */
+/*   Updated: 2022/05/13 17:11:15 by jniemine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ typedef struct s_format_string
 {
 	const char	*str;
 	va_list		argcs;
-	unsigned long long print_len;
+	unsigned long long ret;
 	unsigned int		nb_len;
 	int			flags;
 	int			width;
@@ -47,6 +47,9 @@ typedef struct s_format_string
 	int			neg;
 	int			percent_flag;
 }				t_fs;
+
+void print_float(t_fs *f_str, long double f);
+int get_digit_before_decimal(long double f);
 
 int is_flag(char c);
 void put_character(t_fs *f_str);

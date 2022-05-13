@@ -1,12 +1,14 @@
 NAME = libftprintf.a
 
-INC =	-I./includes/		\
-		-I./libft/	\
+INC =	-I./includes/			\
+		-I./libft/				\
 	
-SRC =	./ft_printf.c	\
-		./float_to_ascii.c	\
-		./put_string.c	\
-		./libft/*.c	\
+SRC =	./ft_printf.c			\
+		./float_to_ascii.c		\
+		./put_string.c			\
+		./put_pointer_address.c \
+		./float_part_1.c		\
+		./libft/*.c				\
 
 OBJ =	./*.o
 
