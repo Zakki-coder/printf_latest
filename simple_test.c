@@ -69,8 +69,8 @@ void test_d_i()
 {
 //	printf("Input 3 |%0.4d|\n", 3);
 //	ft_printf("Input 3 |%0.4d|\n", 3);
-	//printf("% 10.5d\n", 4242);
-	//ft_printf("% 10.5d\n", 4242);
+//	printf("% 10.5d\n", 4242);
+//	ft_printf("% 10.5d\n", 4242);
 	//printf("% 10.11d\n", 4242);
 	//ft_printf("% 10.11d\n", 4242);
 	//printf("@moulitest: %.10d\n", -42);
@@ -123,8 +123,6 @@ void test_d_i()
 //	ft_printf("% 7u\n", 0);
 //	printf("%7u\n", -0);
 //	ft_printf("%7u\n", -0);
-//	printf("%+-.18u\n", 2147483647);
-//	ft_printf("%+-.18u\n", 2147483647);
 //	printf("%+.18u\n", 2147483647);
 //	ft_printf("%+.18u\n", 2147483647);
 //	printf("%+18u\n", 2147483647);
@@ -141,8 +139,8 @@ void test_d_i()
 //	ft_printf("% -.10u\n", 2147483647);
 //	printf("% -u\n", 2147483647);
 //	ft_printf("% -u\n", 2147483647);
-	printf("%+d\n", 0);
-	ft_printf("%+d\n", 0);
+//	printf("%+d\n", 0);
+//	ft_printf("%+d\n", 0);
 //	printf("% d\n", 0);
 //	ft_printf("% d\n", 0);
 //	printf("%+-.18ld\n", 1);
@@ -153,8 +151,14 @@ void test_d_i()
 //	ft_printf("%.5d\n", 0);
 //	printf("%d\n", 0);
 //	ft_printf("%d\n", 0);
-	printf("%+7hd\n", 0);
-	ft_printf("%+7hd\n", 0);
+//	printf("%+7hd\n", 0);
+//	ft_printf("%+7hd\n", 0);
+//	printf("%+-.18u\n", 2147483647);
+//	ft_printf("%+-.18u\n", 2147483647);
+//	printf("%d\n", 2147483648);
+//	ft_printf("%d\n", 2147483648);
+	printf("%u%u%u%u%u\n", 1, 100, 999, 42, 999988888);
+	ft_printf("%u%u%u%u%u\n", 1, 100, 999, 42, 999988888);
 }
 
 void test_x()
@@ -259,6 +263,8 @@ void test_print_octal()
 	printf("|%#-3.0o|\n", 0);
 	ft_printf("|%#-3.0o|\n", 0);
 	//If precision larger than width and number then add zeroes to front
+	ft_printf("%o\\n", 40);
+
 }
 
 void test_percent()
@@ -762,6 +768,43 @@ void test_unsigned()
 	ft_printf("%-33.12.d\n", 256);
 
 }
+
+void where_is_leak()
+{
+//  ft_printf("\\n");
+//  ft_printf("%%\\n");
+//  ft_printf("%d\\n", 42);
+//  ft_printf("%d%d\\n", 42, 41);
+//  ft_printf("%d%d%d\\n", 42, 43, 44);
+//  ft_printf("%ld\\n", 2147483647);
+//  ft_printf("%lld\\n", 9223372036854775807);
+//  ft_printf("%x\\n", 505);
+//  ft_printf("%X\\n", 505);
+//  ft_printf("%p\\n", &ft_printf);
+//  ft_printf("%20.15d\\n", 54321);
+//  ft_printf("%-10d\\n", 3);
+//  ft_printf("% d\\n", 3);
+//  ft_printf("%+d\\n", 3);
+//  ft_printf("%010d\\n", 1);
+//  ft_printf("%hhd\\n", 0);
+//  ft_printf("%jd\\n", 9223372036854775807);
+
+//  ft_printf("%zd\\n", 4294967295);
+//  ft_printf("%\\n");
+  	ft_printf("%U", 4294967295);
+
+//  ft_printf("%u\\n", 4294967295);
+//  ft_printf("%o\\n", 40);
+//  ft_printf("%%#08x\\n", 42);
+//  ft_printf("%x\\n", 1000);
+
+//  ft_printf("%#X\\n", 1000);
+//  ft_printf("%s\\n", NULL);
+//  ft_printf("%S\\n", L"ݗݜशব");
+//  ft_printf("%s%s\\n", "test", "test");
+//  ft_printf("%s%s%s\\n", "test", "test", "test");
+//  ft_printf("%C\\n", 15000);
+}
 /* Anything excpet float with value 0 and precisionn zero prints no digits */
 int main(void)
 {
@@ -782,11 +825,12 @@ int main(void)
 //	test_rounder();
 //	single_float();
 //	test_long_double();
-	test_str();
+//	test_str();
 //	float_play();
 //	test_char();
 //	test_ptr();
 //	test_minus();
 //	test_unsigned();
+	where_is_leak();
 	return (0);
 }

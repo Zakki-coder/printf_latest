@@ -6,13 +6,79 @@
 /*   By: jniemine <jniemine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/09 17:51:33 by jniemine          #+#    #+#             */
-/*   Updated: 2022/05/13 16:31:19 by jniemine         ###   ########.fr       */
+/*   Updated: 2022/05/13 21:17:19 by jniemine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "includes/ft_printf.h"
 
 int has_prefix(t_fs *f_str);
+
+long long cast_to_modifier(t_fs *f_str, long long ll)
+{
+	int m;
+
+	m = f_str->modifier;
+	//Add calls for the rest of diouxX, modify print_di to take care of things
+	//Modifier decides casting, diouxX is just the format
+	if (m & LLONG)
+		return((long long)ll);//print_di(f_str, (long long)ll);
+	else if (m & LONG)
+		return((long)ll);//print_di(f_str, (long)ll);
+	else if (m & SHORT)
+		return((short)ll);//print_di(f_str, (short)ll);
+	else if (m & CHAR)
+		return((char)ll);//print_di(f_str, (char)ll);
+	return((int)ll);//print_di(f_str, (int)ll);
+}
+
+unsigned long long cast_to_modifier_u(t_fs *f_str, unsigned long long ll)
+{
+	int m;
+
+	m = f_str->modifier;
+	if (m & LLONG)
+		return((unsigned long long)ll);//print_di(f_str, (long long)ll);
+	else if (m & LONG)
+		return((unsigned long)ll);//print_di(f_str, (long)ll);
+	else if (m & SHORT)
+		return((unsigned short)ll);//print_di(f_str, (short)ll);
+	else if (m & CHAR)
+		return((unsigned char)ll);//print_di(f_str, (char)ll);
+	return((unsigned int)ll);//print_di(f_str, (int)ll);
+}
+
+long long get_argument(t_fs *f_str)
+{
+	int m;
+	long long arg;
+
+	m = f_str->modifier;
+	if (m & LLONG)
+		arg = va_arg(f_str->argcs, long long);
+	else if (m & LONG)
+		arg = va_arg(f_str->argcs, long);
+	else
+		arg = va_arg(f_str->argcs, int);
+	return (arg);
+}
+
+unsigned long long get_argument_u(t_fs *f_str)
+{
+	int m;
+	unsigned long long arg;
+
+	m = f_str->modifier;
+	if (m & LDBL)
+		arg = va_arg(f_str->argcs, long double);//call get_ldbl, which gets the value How the original does it, is there SEGFAULT here?
+	else if (m & LLONG)
+		arg = va_arg(f_str->argcs, unsigned long long int);
+	else if (m & LONG)
+		arg = va_arg(f_str->argcs, long int);
+	else
+		arg = va_arg(f_str->argcs, unsigned int);
+	return (arg);
+}
 
 unsigned long long print_spaces(int len)
 {
@@ -227,20 +293,7 @@ void get_modifiers(t_fs *f_str, const char *format)
 	}
 }
 
-long long get_argument(t_fs *f_str)
-{
-	int m;
-	long long arg;
 
-	m = f_str->modifier;
-	if (m & LLONG)
-		arg = va_arg(f_str->argcs, long long);
-	else if (m & LONG)
-		arg = va_arg(f_str->argcs, long);
-	else
-		arg = va_arg(f_str->argcs, int);
-	return (arg);
-}
 /* Handle width is used multiple places */
 
 void handle_width(t_fs *f_str, int len)
@@ -386,18 +439,38 @@ void switch_off_flags(t_fs *f_str, long long ll)
 	}
 }
 
-//Precision guarantees the number of digits, so if there is precision and prefix, then +1 width
-void itodiutoa(t_fs *f_str, long long ll)
+unsigned long long get_int_argument(t_fs *f_str)
+{
+	unsigned long long	ull;
+	long long			ll;
+
+	ull = 0;
+	ll = 0;
+	if (*f_str->str == 'u' || *f_str->str == 'U')
+	{
+		ull = get_argument_u(f_str);
+		ull = cast_to_modifier_u(f_str, ull);
+	}
+	else
+	{
+		ll = get_argument(f_str);
+		switch_off_flags(f_str, ll);
+		ll = cast_to_modifier(f_str, ll);
+		ull = convert_from_negativity(f_str, ll);
+	}
+	return (ull);
+}
+
+void itodiutoa(t_fs *f_str)
 {
 	char	*out; //Remember to free
 	int		len;
 	int		prefix;
 	unsigned long long ull;
-	/* Zero case hasnt been tested */	
-	if (zero_case(f_str, ll))
+
+	ull = get_int_argument(f_str);
+	if (zero_case(f_str, ull))
 		return ;
-	switch_off_flags(f_str, ll);
-	ull = convert_from_negativity(f_str, ll);
 	len = nb_length(ull);
 	handle_width(f_str, len); //Remember to free
 	if (f_str->precision < len)
@@ -410,7 +483,7 @@ void itodiutoa(t_fs *f_str, long long ll)
 	if (f_str->flags & MINUS)
 	{
 		prefix = 0;
-		if (ll < (unsigned long long)0 || f_str->flags & PLUS || f_str->flags & SPACE || f_str->neg)
+		if (f_str->flags & PLUS || f_str->flags & SPACE || f_str->neg)
 			prefix = 1;
 		if (f_str->precision - len > 0)
 		{
@@ -545,12 +618,24 @@ void right_adjusted_octal(t_fs *fs, unsigned long long ull, int len)
 /* Number of zeroes = precision - number length. If number is nonzero.
  * If precision is not given and zero flag is on. Number of zeroes = width - number length
  */
-void itootoa(t_fs *f_str, unsigned long long ull)
+unsigned long long get_octa_argument(t_fs *f_str)
+{
+	unsigned long long ull;
+
+	ull = 0;
+	ull = get_argument_u(f_str);
+	ull = cast_to_modifier_u(f_str, ull);
+	return (ull);
+}
+
+void itootoa(t_fs *f_str)
 {
 	int len;
 	int width;
 	int precision;
+	unsigned long long ull;
 
+	ull = get_octa_argument(f_str);
 	if (ull == 0 && f_str->is_precision && f_str->precision == 0)
 	{
 		if (f_str->flags & HASH)
@@ -747,9 +832,6 @@ void itoxa(t_fs *f_str, long long nb)
 	if (zero_case(f_str, nb))
 		return;
 	width = f_str->width;
-	//When precision is explicitly zero, this doesnt work FIX IT
-	//Always print zero except when precision is 0 and there is no hash.
-	/* Create number, calculate width > precision > number length, choose largest */
 	len = hexa_len(f_str, convert_from_negativity(f_str, nb));
 	update_precision(f_str, len);
 	precision = f_str->precision;
@@ -758,8 +840,6 @@ void itoxa(t_fs *f_str, long long nb)
 		right_adjusted_hexa(f_str, nb, len);
 	else
 	{
-		/* With # prefix with zero, test with zero and 0 precision. */
-		/* If precision is larger than len, then add zeroes to front, test all functions */
 		if (f_str->flags & HASH && nb != 0)
 		{
 			put_hexa_prefix(f_str);
@@ -781,46 +861,15 @@ void function_dispatcher(t_fs *f_str, long long ll)
 {
 			//call either absolute_itoa, otoa, or xtoa, or the unsigned one
 	if(*f_str->str == 'd' || *f_str->str == 'i' || *f_str->str == 'u' || *f_str->str == 'U')	
-		itodiutoa(f_str, ll);
+		itodiutoa(f_str);
 	if (*f_str->str == 'o')
-		itootoa(f_str, ll);
+		itootoa(f_str);
 	if (*f_str->str == 'x' || *f_str->str == 'X')
 		itoxa(f_str, ll);
 }
 
-unsigned long long cast_to_modifier_u(t_fs *f_str, unsigned long long ll)
-{
-	int m;
 
-	m = f_str->modifier;
-	if (m & LLONG)
-		return((unsigned long long)ll);//print_di(f_str, (long long)ll);
-	else if (m & LONG)
-		return((unsigned long)ll);//print_di(f_str, (long)ll);
-	else if (m & SHORT)
-		return((unsigned short)ll);//print_di(f_str, (short)ll);
-	else if (m & CHAR)
-		return((unsigned char)ll);//print_di(f_str, (char)ll);
-	return((unsigned int)ll);//print_di(f_str, (int)ll);
-}
 
-long long cast_to_modifier(t_fs *f_str, long long ll)
-{
-	int m;
-
-	m = f_str->modifier;
-	//Add calls for the rest of diouxX, modify print_di to take care of things
-	//Modifier decides casting, diouxX is just the format
-	if (m & LLONG)
-		return((long long)ll);//print_di(f_str, (long long)ll);
-	else if (m & LONG)
-		return((long)ll);//print_di(f_str, (long)ll);
-	else if (m & SHORT)
-		return((short)ll);//print_di(f_str, (short)ll);
-	else if (m & CHAR)
-		return((char)ll);//print_di(f_str, (char)ll);
-	return((int)ll);//print_di(f_str, (int)ll);
-}
 	
 /* Never format string or argcs or ret */
 void format_fs(t_fs *f_str)
@@ -836,22 +885,6 @@ void format_fs(t_fs *f_str)
 	f_str->nb_len = 0;
 }
 
-unsigned long long get_argument_u(t_fs *f_str)
-{
-	int m;
-	unsigned long long arg;
-
-	m = f_str->modifier;
-	if (m & LDBL)
-		arg = va_arg(f_str->argcs, long double);//call get_ldbl, which gets the value How the original does it, is there SEGFAULT here?
-	else if (m & LLONG)
-		arg = va_arg(f_str->argcs, unsigned long long int);
-	else if (m & LONG)
-		arg = va_arg(f_str->argcs, long int);
-	else
-		arg = va_arg(f_str->argcs, unsigned int);
-	return (arg);
-}
 
 void left_adjusted_percent(t_fs *f_str)
 {
@@ -899,28 +932,12 @@ void parse_conversion(t_fs *f_str, char conversion)
 	long double			ld;
 	long long int		ll;
 	unsigned long long	ull;
-	//str should be pointing to conversion
-	//make a function which gets the argument from stack
-	//Conver the value to octal-, hexa-, integer- or float string
-	//One function to return long long and one to return long double
-	/* TODO get rid of get_argument and function dispatcher 
-		You can still use cast_to_modifier */
-	if (conversion != 'X' && conversion != 'x' && conversion != 'f' && conversion != '%' && conversion != 's' && conversion != 'c' && conversion != 'p')
-	{
-		if (conversion != 'd' && conversion != 'i')
-		{
-			ull = get_argument_u(f_str);
-			ull = cast_to_modifier_u(f_str, ull);
-			function_dispatcher(f_str, ull);
-		}
-		else if (conversion != 'X' || conversion != 'x')
-		{
-			ll = get_argument(f_str);
-			ll = cast_to_modifier(f_str, ll);
-			function_dispatcher(f_str, ll);
-		}
-
-	}
+	
+	if (conversion == 'u' || conversion == 'U'
+		|| conversion == 'd' || conversion == 'i')
+		itodiutoa(f_str);
+	else if (conversion == 'o')
+		itootoa(f_str);
 	else if (conversion == 'X' || conversion == 'x')
 		get_itoxa_argument(f_str);
 	else if (conversion == '%')
@@ -943,7 +960,7 @@ int is_flag(char c)
 
 int is_correct_format_str(char c)
 {
-	return (ft_isdigit(c) /*|| is_conversion(c)*/ || is_modifier(c) || is_flag(c)
+	return (ft_isdigit(c) || is_modifier(c) || is_flag(c)
 			|| c == '%');
 }
 
@@ -990,7 +1007,6 @@ void parser(t_fs *f_str)
 	const char *percent;
 	char *format;
 
-	//TODO Integrate parse_conversion, at leas %% is missing.
 	conversion = NULL;
 	while (*f_str->str != '\0')
 	{
@@ -1026,27 +1042,6 @@ void parser(t_fs *f_str)
 			free (format);
 		}
 	}
-/*	str = &f_str->str;
-	while (**str != '\0')
-	{
-	//Traverse and print format until %, with print_chars then send to get_flags
-	if(print_chars(f_str) == -1)
-		return ;
-	if (conversion || **str == '%')
-		while((!is_conversion(**str) || **str == '%') && **str != '\0')
-		{
-			++(*str);
-	//Loop for width(number), precision(.number), length mod(letter) until conversion or \0 is encountered
-			if (**str == '%' || **str == 'U')
-				break;
-		}
-		//Print the first conversion out and reset struct
-		if (is_conversion(**str) || **str == '%' || **str == 'U')
-			parse_conversion(f_str);
-		else
-			no_conversion(f_str);
-	}
-*/	//If we find \0 before conversion, nothing gets printed int the '%'-'\0' range, is it correcto?
 }
 
 int	ft_printf(const char *str, ...)
