@@ -9,6 +9,7 @@ SRC =	./ft_printf.c			\
 		./float_part_1.c		\
 		./float_part_2.c		\
 		./float_part_3.c		\
+		./parser_part_1.c		\
 		./libft/*.c				\
 
 OBJ =	./*.o

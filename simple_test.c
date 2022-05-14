@@ -234,8 +234,10 @@ void test_octal_len()
 {
 	int input = 12;
 
-	printf("|%-#5.3o|\n", input);
-	ft_printf("|%-#5.3o|\n", input);
+//	printf("|%-#5.3o|\n", input);
+//	ft_printf("|%-#5.3o|\n", input);
+	printf("|%lo|\n",ULONG_MAX);
+	ft_printf("|%lo|\n",ULONG_MAX);
 }
 
 void test_print_octal()
@@ -817,7 +819,7 @@ int main(void)
 //	test_d_i();
 //	test_x();
 //	wtf();
-//	test_octal_len();
+	test_octal_len();
 //	test_print_octal();
 /*	copy tests from percent and interesting to automatic test file NOW */
 //	test_percent();
@@ -831,6 +833,6 @@ int main(void)
 //	test_ptr();
 //	test_minus();
 //	test_unsigned();
-	where_is_leak();
+//	where_is_leak();
 	return (0);
 }

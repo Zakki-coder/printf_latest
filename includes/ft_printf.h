@@ -6,7 +6,7 @@
 /*   By: jniemine <jniemine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/14 15:15:00 by jniemine          #+#    #+#             */
-/*   Updated: 2022/05/13 18:32:53 by jniemine         ###   ########.fr       */
+/*   Updated: 2022/05/14 18:00:05 by jniemine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,12 @@ typedef struct s_format_string
 void print_float(t_fs *f_str, long double f);
 int get_digit_before_decimal(long double f);
 long double ten_raised_to_n(unsigned int n);
-
+void parser(t_fs *f_str);
+void get_flags(t_fs *f_str, char *fs);
+void get_width(t_fs *f_str, const char *format);
+void get_precision(t_fs *f_str, const char *format);
+void get_precision(t_fs *f_str, const char *format);
+void parse_conversion(t_fs *f_str, char conversion);
 int is_flag(char c);
 void put_character(t_fs *f_str);
 void itoxa(t_fs *f_str, long long nb);
