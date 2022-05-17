@@ -3,16 +3,31 @@
 /*                                                        :::      ::::::::   */
 /*   parser_part_1.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jniemine <jniemine@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jakken <jakken@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/14 17:55:59 by jniemine          #+#    #+#             */
-/*   Updated: 2022/05/14 17:57:33 by jniemine         ###   ########.fr       */
+/*   Updated: 2022/05/16 20:04:53 by jakken           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-int no_conversion(t_fs *f_str)
+int not_atoi(const char **s)
+{
+	int n;
+
+	n = 0;
+	while (ft_isdigit(**s))
+	{
+		n *= 10;
+		n += **s - '0';	
+		++(*s);
+	}
+	--(*s);
+	return(n);
+}
+
+static int no_conversion(t_fs *f_str)
 {
 	if (f_str->width >= 1)
 		f_str->width -= 1;
@@ -48,7 +63,7 @@ const char *search_conversion(const char *fs)
 	return (NULL);
 }
 
-void get_format(t_fs *f_str, const char *conversion, const char *percent)
+static void get_format(t_fs *f_str, const char *conversion, const char *percent)
 {
 	char *format;
 
@@ -63,7 +78,7 @@ void get_format(t_fs *f_str, const char *conversion, const char *percent)
 	get_precision(f_str, format);
 	get_modifiers(f_str, format);
 	f_str->str = conversion;
-	parse_conversion(f_str, *conversion);
+	function_dispatcher(f_str, *conversion);
 	free (format);
 }
 
@@ -93,22 +108,5 @@ void parser(t_fs *f_str)
 		}
 		else
 			get_format(f_str, conversion, percent);
-/*		{
-			f_str->ret += write(1, f_str->str, percent - f_str->str);
-			format = (char *)ft_memalloc(sizeof(*format) * (conversion - percent) + 1);
-			if (format == NULL) //FREE
-				exit(-1);
-			ft_memcpy(format, percent, conversion - percent);
-			format[conversion - percent + 1] = '\0';
-			get_flags(f_str, format);
-			get_width(f_str, format);
-			get_precision(f_str, format);
-			get_modifiers(f_str, format);
-			f_str->str = conversion;
-			parse_conversion(f_str, *conversion);
-			free (format);
-		}
-	}
-*/
 	}
 }

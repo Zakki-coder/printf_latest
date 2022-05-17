@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_printf.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jniemine <jniemine@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jakken <jakken@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/14 15:15:00 by jniemine          #+#    #+#             */
-/*   Updated: 2022/05/14 18:00:05 by jniemine         ###   ########.fr       */
+/*   Updated: 2022/05/16 20:05:01 by jakken           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@ typedef struct s_format_string
 	int			percent_flag;
 }				t_fs;
 
+int not_atoi(const char **s);
 void print_float(t_fs *f_str, long double f);
 int get_digit_before_decimal(long double f);
 long double ten_raised_to_n(unsigned int n);
@@ -56,8 +57,8 @@ void get_flags(t_fs *f_str, char *fs);
 void get_width(t_fs *f_str, const char *format);
 void get_precision(t_fs *f_str, const char *format);
 void get_precision(t_fs *f_str, const char *format);
-void parse_conversion(t_fs *f_str, char conversion);
-int is_flag(char c);
+void function_dispatcher(t_fs *f_str, char conversion);
+//int is_flag(char c);
 void put_character(t_fs *f_str);
 void itoxa(t_fs *f_str, long long nb);
 void put_pointer_address(t_fs *f_str);

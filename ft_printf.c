@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_printf.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jniemine <jniemine@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jakken <jakken@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/09 17:51:33 by jniemine          #+#    #+#             */
-/*   Updated: 2022/05/14 17:57:26 by jniemine         ###   ########.fr       */
+/*   Updated: 2022/05/16 19:58:39 by jakken           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,7 +158,7 @@ int print_chars(t_fs *f_str)
 	return (1);
 }
 */
-
+/*
 void get_flags(t_fs *f_str, char *fs)
 {
 	int *flags;
@@ -178,6 +178,7 @@ void get_flags(t_fs *f_str, char *fs)
 	if (ft_strchr(fs, ' '))
 		*flags |= SPACE;
 }
+*/
 
 int is_conversion(char c)
 {
@@ -185,6 +186,7 @@ int is_conversion(char c)
 			|| c == 'o' || c == 'u' || c == 'x' || c == 'X');
 }
 
+/*
 int not_atoi(const char **s)
 {
 	int n;
@@ -199,7 +201,9 @@ int not_atoi(const char **s)
 	--(*s);
 	return(n);
 }
+*/
 	
+/*
 void get_width(t_fs *f_str, const char *format)
 {
 	long int n;
@@ -228,8 +232,10 @@ void get_width(t_fs *f_str, const char *format)
 		}
 	}
 }
+*/
 
 /* precision has been initialized to -1 and changes to at least to zero if . is found *precision */
+/*
 void get_precision(t_fs *f_str, const char *format)
 {
 	long int n;
@@ -263,13 +269,14 @@ void get_precision(t_fs *f_str, const char *format)
 		}
 	}
 }
-
+*/
 /* ll or hh doesnt need to be checked because l and h will catch those */
 int is_modifier(char c)
 {
 	return (c == 'U' || c == 'L' || c == 'l' || c == 'h');
 }
 
+/*
 void get_modifiers(t_fs *f_str, const char *format)
 {
 	//loop until largest modifier is found, or conversion char or null is found
@@ -292,6 +299,7 @@ void get_modifiers(t_fs *f_str, const char *format)
 		++format;
 	}
 }
+*/
 
 
 /* Handle width is used multiple places */
@@ -429,13 +437,6 @@ void switch_off_flags(t_fs *f_str, long long ll)
 			f_str->flags ^= PLUS;  
 		if (f_str->flags & SPACE)
 			f_str->flags ^= SPACE;  
-	}
-	if (ll == 0)
-	{
-//		if (f_str->flags & PLUS)
-//			f_str->flags ^= PLUS;  
-//		if (!(f_str->is_precision))
-//			f_str->flags |= SPACE;  
 	}
 }
 
@@ -801,11 +802,8 @@ void update_precision(t_fs *f_str, int len)
 	int precision;
 
 	precision = f_str->precision;
-	/* Default precision to 1 */
 	if (!f_str->is_precision)
 		f_str->precision = 1;	
-//	if (len > precision && !(f_str->is_precision && precision == 0))
-//		f_str->precision = len;
 }
 
 void get_itoxa_argument(t_fs *f_str)
@@ -857,6 +855,7 @@ void itoxa(t_fs *f_str, long long nb)
 	++f_str->str;
 }
 
+/*
 void function_dispatcher(t_fs *f_str, long long ll)
 {
 			//call either absolute_itoa, otoa, or xtoa, or the unsigned one
@@ -867,10 +866,8 @@ void function_dispatcher(t_fs *f_str, long long ll)
 	if (*f_str->str == 'x' || *f_str->str == 'X')
 		itoxa(f_str, ll);
 }
+*/
 
-
-
-	
 /* Never format string or argcs or ret */
 void format_fs(t_fs *f_str)
 {
@@ -886,11 +883,13 @@ void format_fs(t_fs *f_str)
 }
 
 
+/*
 void left_adjusted_percent(t_fs *f_str)
 {
 	putchar_and_count('%', f_str);	
 	f_str->ret += print_spaces(f_str->width - 1);
 }
+*/
 	
 void right_adjusted_percent(t_fs *f_str)
 {
@@ -921,13 +920,16 @@ void right_adjusted_percent(t_fs *f_str)
 void put_percent(t_fs *f_str)
 {
 	if (f_str->flags & MINUS)
-		left_adjusted_percent(f_str);
+	{
+		putchar_and_count('%', f_str);	
+		f_str->ret += print_spaces(f_str->width - 1);
+	}
 	else
 		right_adjusted_percent(f_str);
 	++f_str->str;
 }
 
-void parse_conversion(t_fs *f_str, char conversion)
+void function_dispatcher(t_fs *f_str, char conversion)
 {
 	long double			ld;
 	long long int		ll;
@@ -953,22 +955,23 @@ void parse_conversion(t_fs *f_str, char conversion)
 	format_fs(f_str);
 }
 
+/*
 int is_flag(char c)
 {
 	return (c == '#' || c == '-' || c == '0' || c == '+' || c == ' ');
 }
+*/
 
+/*
 int is_correct_format_str(char c)
 {
 	return (ft_isdigit(c) || is_modifier(c) || is_flag(c)
 			|| c == '%');
 }
-
-
+*/
 
 int	ft_printf(const char *str, ...)
 {
-	//TEST that implicit formatting works
 	t_fs	f_str;
 
 	format_fs(&f_str);
