@@ -6,7 +6,7 @@
 /*   By: jniemine <jniemine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/13 18:28:41 by jniemine          #+#    #+#             */
-/*   Updated: 2022/05/13 18:29:08 by jniemine         ###   ########.fr       */
+/*   Updated: 2022/05/14 18:48:10 by jniemine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ long double	rounder(t_fs *f_str, long double f)
 	else if (direction == 0)
 	{
 		if (for_bankers % 2 != 0 || (for_bankers == 0 && f_str->precision > 0))
-		f += divide_one_with_ten_n(f_str->precision);
+			f += divide_one_with_ten_n(f_str->precision);
 		return (f);
 	}
 	return (f);

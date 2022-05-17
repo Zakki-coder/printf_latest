@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_printf.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jakken <jakken@student.42.fr>              +#+  +:+       +#+        */
+/*   By: jniemine <jniemine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/14 15:15:00 by jniemine          #+#    #+#             */
-/*   Updated: 2022/05/16 20:05:01 by jakken           ###   ########.fr       */
+/*   Updated: 2022/05/17 22:43:24 by jniemine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,25 @@ typedef struct s_format_string
 	int			percent_flag;
 }				t_fs;
 
+unsigned long long cast_to_modifier_u(t_fs *f_str, unsigned long long ll);
+long long cast_to_modifier(t_fs *f_str, long long ll);
+int is_signed(char c);
+void integer(t_fs *f_str);
+unsigned int octal_print(unsigned long long ull);
+void right_adjusted_octal(t_fs *fs, unsigned long long ull, int len);
+unsigned long long get_argument_u(t_fs *f_str);
+long long get_argument(t_fs *f_str);
+void octal(t_fs *f_str);
+void hexa_print(t_fs *f_str, unsigned long long ull);
+void right_adjusted_hexa(t_fs *fs, unsigned long long ull, int len);
+void put_hexa_prefix(t_fs *fs);
+void handle_width(t_fs *f_str, int len);
+void putchar_and_count(char c, t_fs *f_str);
+int str_reverse(char *s);
+int zero_case(t_fs *f_str, unsigned long long ull);
+unsigned long long convert_from_negativity(t_fs *f_str, long long ll);
+void get_itoxa_argument(t_fs *f_str);
+void right_adjusted_hexa(t_fs *fs, unsigned long long ull, int len);
 int not_atoi(const char **s);
 void print_float(t_fs *f_str, long double f);
 int get_digit_before_decimal(long double f);
@@ -60,7 +79,7 @@ void get_precision(t_fs *f_str, const char *format);
 void function_dispatcher(t_fs *f_str, char conversion);
 //int is_flag(char c);
 void put_character(t_fs *f_str);
-void itoxa(t_fs *f_str, long long nb);
+void hexa(t_fs *f_str, long long nb);
 void put_pointer_address(t_fs *f_str);
 unsigned long long print_spaces(int len);
 unsigned long long  print_zeroes(int len);

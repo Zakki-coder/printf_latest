@@ -6,13 +6,13 @@
 /*   By: jniemine <jniemine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/13 15:12:05 by jniemine          #+#    #+#             */
-/*   Updated: 2022/05/13 16:30:51 by jniemine         ###   ########.fr       */
+/*   Updated: 2022/05/17 21:03:42 by jniemine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-static void	itoxa_wrapper(t_fs *f_str, unsigned long long address)
+static void	hexa_wrapper(t_fs *f_str, unsigned long long address)
 {
 	int	precision;
 	int	width;
@@ -24,7 +24,7 @@ static void	itoxa_wrapper(t_fs *f_str, unsigned long long address)
 	f_str->is_precision = 0;
 	f_str->width = 0;
 	f_str->precision = 0;
-	itoxa(f_str, address);
+	hexa(f_str, address);
 	f_str->is_precision = is_precision;
 	f_str->width = width;
 	f_str->precision = precision;
@@ -69,7 +69,7 @@ void	put_pointer_address(t_fs *f_str)
 	if (address == 0 && (!(f_str->is_precision) || f_str->precision > 0))
 			f_str->ret += write(1, "0", 1);
 	if (address != 0)
-		itoxa_wrapper(f_str, address);
+		hexa_wrapper(f_str, address);
 	else
 		++(f_str->str);
 	if (f_str->flags & MINUS)

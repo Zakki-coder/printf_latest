@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_format_utilities.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jakken <jakken@student.42.fr>              +#+  +:+       +#+        */
+/*   By: jniemine <jniemine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/16 19:20:57 by jakken            #+#    #+#             */
-/*   Updated: 2022/05/16 19:50:11 by jakken           ###   ########.fr       */
+/*   Updated: 2022/05/17 19:02:28 by jniemine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ void	get_width(t_fs *f_str, const char *format)
 		if (ft_isdigit(*format) && *(format - 1) != '.' && *format != '0')
 		{
 			n = not_atoi(&format);
-			if (n <= MAX_INT) //DELETE THIS, TEST ON MAC
+			if (n <= MAX_INT)
 				f_str->width = n;
 		}
 		else if (*format == '*' && *(format - 1) != '.')

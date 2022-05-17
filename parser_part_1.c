@@ -3,31 +3,31 @@
 /*                                                        :::      ::::::::   */
 /*   parser_part_1.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jakken <jakken@student.42.fr>              +#+  +:+       +#+        */
+/*   By: jniemine <jniemine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/14 17:55:59 by jniemine          #+#    #+#             */
-/*   Updated: 2022/05/16 20:04:53 by jakken           ###   ########.fr       */
+/*   Updated: 2022/05/17 19:07:16 by jniemine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-int not_atoi(const char **s)
+int	not_atoi(const char **s)
 {
-	int n;
+	int	n;
 
 	n = 0;
 	while (ft_isdigit(**s))
 	{
 		n *= 10;
-		n += **s - '0';	
+		n += **s - '0';
 		++(*s);
 	}
 	--(*s);
-	return(n);
+	return (n);
 }
 
-static int no_conversion(t_fs *f_str)
+static int	no_conversion(t_fs *f_str)
 {
 	if (f_str->width >= 1)
 		f_str->width -= 1;
@@ -38,13 +38,14 @@ static int no_conversion(t_fs *f_str)
 	return (1);
 }
 
-const char *search_conversion(const char *fs)
+const char	*search_conversion(const char *fs)
 {
-	char *conversions = "diouUxXfcsp%";
-	int i;
-	int k;
-	char *ret_conversion;
+	char	*conversions;
+	int		i;
+	int		k;
+	char	*ret_conversion;
 
+	conversions = "diouUxXfcsp%";
 	i = 0;
 	k = 0;
 	if (!fs)
@@ -63,13 +64,13 @@ const char *search_conversion(const char *fs)
 	return (NULL);
 }
 
-static void get_format(t_fs *f_str, const char *conversion, const char *percent)
+static void	get_format(t_fs *f_str, const char *conversion, const char *percent)
 {
-	char *format;
+	char	*format;
 
 	f_str->ret += write(1, f_str->str, percent - f_str->str);
 	format = (char *)ft_memalloc(sizeof(*format) * (conversion - percent) + 1);
-	if (format == NULL) //FREE
+	if (format == NULL)
 		exit(-1);
 	ft_memcpy(format, percent, conversion - percent);
 	format[conversion - percent + 1] = '\0';
@@ -82,11 +83,11 @@ static void get_format(t_fs *f_str, const char *conversion, const char *percent)
 	free (format);
 }
 
-void parser(t_fs *f_str)
+void	parser(t_fs *f_str)
 {
-	const char **str;
-	const char *conversion;
-	const char *percent;
+	const char	**str;
+	const char	*conversion;
+	const char	*percent;
 
 	conversion = NULL;
 	while (*f_str->str != '\0')

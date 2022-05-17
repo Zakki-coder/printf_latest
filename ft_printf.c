@@ -3,16 +3,35 @@
 /*                                                        :::      ::::::::   */
 /*   ft_printf.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jakken <jakken@student.42.fr>              +#+  +:+       +#+        */
+/*   By: jniemine <jniemine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/09 17:51:33 by jniemine          #+#    #+#             */
-/*   Updated: 2022/05/16 19:58:39 by jakken           ###   ########.fr       */
+/*   Updated: 2022/05/17 22:59:42 by jniemine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "includes/ft_printf.h"
 
 int has_prefix(t_fs *f_str);
+
+int str_reverse(char *s)
+{
+	int len;
+	int i;
+	char temp[100];
+
+	bzero(temp, 100);
+	len = ft_strlen(s) - 1;
+	i = 0;
+	while (len >= 0)
+	{
+		temp[i] = s[len];
+		++i;
+		--len;
+	}
+	ft_putstr(temp);
+	return (ft_strlen(temp));
+}
 
 long long cast_to_modifier(t_fs *f_str, long long ll)
 {
@@ -321,7 +340,86 @@ void handle_width(t_fs *f_str, int len)
 	if ((!(f & MINUS)) && has_prefix(f_str) && f_str->precision == f_str->width)
 		++f_str->width;
 }
+
+int is_signed(char c)
+{
+	return (c == 'd' || c == 'i' || c == 'f');
+}
+
+int has_prefix(t_fs *f_str)
+{
+	int f;
+
+	f = f_str->flags;
+	if (is_signed(*f_str->str))
+		return (f_str->neg || f & SPACE || f & PLUS);
+	else
+		return (0);
+}
+
+unsigned long long convert_from_negativity(t_fs *f_str, long long ll)
+{
+	unsigned long long ull;
+
+	ull = 0;
+	if (is_signed(*f_str->str) && ll < 0)
+	{
+		f_str->neg = 1;
+		if (ll == -9223372036854775807 - 1)
+			ull = (unsigned long long)9223372036854775807 + 1;
+		else
+			ull = ll * -1;
+		return (ull);
+	}
+	ull = ll;
+	return (ull);
+}
+
+int zero_case(t_fs *f_str, unsigned long long ull)
+{
+	if (ull == 0 && f_str->is_precision && f_str->precision == 0)
+	{
+		if (f_str->flags & PLUS)
+		{
+			f_str->ret += print_spaces(f_str->width - 1);	
+			f_str->ret += write(1, "+", 1);
+		}
+		else
+			f_str->ret += print_spaces(f_str->width);	
+		++f_str->str;
+		return (1);
+	}
+	return (0);
+}
+
+void set_prefix(t_fs *f_str, char *out, unsigned int nb_len)
+{
+	int f;
+	char prefix;
+
+	f = f_str->flags;
+	if (*f_str->str == 'f')
+		f_str->precision = nb_len; 
+	if (f_str->neg)
+		prefix = '-';
+	else if (f & PLUS)
+		prefix = '+';
+	else if (f & SPACE)
+		prefix = ' ';
+	else
+		return ;
+	if (!(f & MINUS) && f & ZERO && !f_str->is_precision)
+		f_str->precision = f_str->width - 1;
+	if ((f & MINUS))
+		*out = prefix;	
+	else if (*f_str->str == 'f' && f & ZERO && !(f & MINUS))
+		*(out + f_str->width - f_str->precision) = prefix;
+	else
+		*(out + f_str->width - f_str->precision - 1) = prefix;
+}
+
 /* itodiutoa starts */
+/*
 static int	nb_length(unsigned long long nb)
 {
 	int	n;
@@ -411,7 +509,6 @@ unsigned long long convert_from_negativity(t_fs *f_str, long long ll)
 	return (ull);
 }
 
-/* Return 1 if the number is 0 and precision is 0 */
 int zero_case(t_fs *f_str, unsigned long long ull)
 {
 	if (ull == 0 && f_str->is_precision && f_str->precision == 0)
@@ -504,6 +601,7 @@ void itodiutoa(t_fs *f_str)
 	++f_str->str;
 	free(out);
 }
+*/
 /* itodiutoa ends */
 
 /* At the moment only used with octal */
@@ -524,6 +622,7 @@ unsigned long long  print_zeroes(int len)
 
 /* Octa Starts */
 /*Argument type is uint because that was the one which gave correct results on my linux*/
+/*
 unsigned int octal_len(t_fs *f_str, unsigned long long ull)
 {
 	char s[100];
@@ -616,9 +715,7 @@ void right_adjusted_octal(t_fs *fs, unsigned long long ull, int len)
 	if (ull > 0 || (ull == 0 && !fs->is_precision && !(fs->flags & HASH)))
 		fs->ret += octal_print(ull);
 }
-/* Number of zeroes = precision - number length. If number is nonzero.
- * If precision is not given and zero flag is on. Number of zeroes = width - number length
- */
+
 unsigned long long get_octa_argument(t_fs *f_str)
 {
 	unsigned long long ull;
@@ -650,15 +747,12 @@ void itootoa(t_fs *f_str)
 	}
 	width = f_str->width;
 	precision = f_str->precision;
-	//Always print zero except when precision is 0 and there is no hash.
-	/* Create number, calculate width > precision > number length, choose largest */
 	len = octal_len(f_str, ull);
 	handle_width(f_str, len);
 	if (!(f_str->flags & MINUS))
 		right_adjusted_octal(f_str, ull, len);
 	else
 	{
-		/* With # prefix with zero, test with zero and 0 precision. */
 		if (f_str->flags & HASH)
 			f_str->ret += print_zeroes(1);
 		if (len > f_str->precision)
@@ -673,11 +767,13 @@ void itootoa(t_fs *f_str)
 	}
 	++f_str->str;
 }
+*/
 /* Octal ends here */
 /* Every conversion has a width for the whole, length for just the digits and offset for where to print it the field */
 
 /* itoxa starts */
 
+/*
 unsigned int hexa_len(t_fs *f_str, unsigned long long ull)
 {
 	char s[100];
@@ -701,25 +797,21 @@ unsigned int hexa_len(t_fs *f_str, unsigned long long ull)
 	f_str->nb_len += ft_strlen(s);
 	return (f_str->nb_len);
 }
+*/
 
+/*
 void put_hexa_prefix(t_fs *fs)
 {
 	char l_case;
 
 	l_case = *fs->str;
-//	if (l_case == 'X' || l_case == 'x')
-//	{
 		if (l_case == 'X')
 			ft_putstr("0X");
 		else
 			ft_putstr("0x");
-//		if (l_case == 'x')
-//			ft_putstr("0x");
 		fs->ret += 2;
-//	}
 }
 
-/* TODO: Check hexa and octa for overflow with huge width */
 void hexa_print(t_fs *f_str, unsigned long long ull)
 {
 	char s[100];
@@ -748,13 +840,16 @@ void hexa_print(t_fs *f_str, unsigned long long ull)
 	}
 	f_str->ret += str_reverse(s);
 }
+*/
+
 /* Dont print prefix if ull == 0 and precision is given*/
 /* Prints too much spaces when hash is given 2 too much to be precise */
+/*
 void right_adjusted_hexa(t_fs *fs, unsigned long long ull, int len)
 {
 	if (fs->is_precision && fs->precision > 0)
 	{
-		if (fs->flags & HASH /*&& !(fs->flags & ZERO)*/)
+		if (fs->flags & HASH)
 			fs->width -= 2;
 		if (fs->precision > len)
 			fs->ret += print_spaces(fs->width - fs->precision);
@@ -782,7 +877,7 @@ void right_adjusted_hexa(t_fs *fs, unsigned long long ull, int len)
 	}
 	else if (fs->is_precision)
 	{		
-		if (fs->flags & HASH/* && ull > 0*/)
+		if (fs->flags & HASH)
 		{
 			len += 2;
 			fs->ret += print_spaces(fs->width - fs->precision - len);
@@ -796,7 +891,9 @@ void right_adjusted_hexa(t_fs *fs, unsigned long long ull, int len)
 	if (ull > 0 || ((ull == 0 && fs->precision > 0)))
 		hexa_print(fs, ull);
 }
+*/
 
+/*
 void update_precision(t_fs *f_str, int len)
 {
 	int precision;
@@ -805,7 +902,9 @@ void update_precision(t_fs *f_str, int len)
 	if (!f_str->is_precision)
 		f_str->precision = 1;	
 }
+*/
 
+/*
 void get_itoxa_argument(t_fs *f_str)
 {
 	long long nb;
@@ -814,15 +913,11 @@ void get_itoxa_argument(t_fs *f_str)
 	nb = cast_to_modifier_u(f_str, nb);
 	itoxa(f_str, nb);	
 }
+*/
 
+/*
 void itoxa(t_fs *f_str, long long nb)
 {
-	/* For x produce output with lowercase, for X with UPPERCASE */
-	/* precision is the minimum numbers of digits to appear, test with zero padd */
-	/* # flag prefixes with 0x or 0X, for NONZERO!!!! */
-	/* 0 flag padds with zeroes on the left */
-	/* - flag left adjustes and overrides 0 flag */
-	/* NO SPACE OR + FLAG */
 	int len;
 	int width;
 	int precision;
@@ -854,20 +949,7 @@ void itoxa(t_fs *f_str, long long nb)
 	}
 	++f_str->str;
 }
-
-/*
-void function_dispatcher(t_fs *f_str, long long ll)
-{
-			//call either absolute_itoa, otoa, or xtoa, or the unsigned one
-	if(*f_str->str == 'd' || *f_str->str == 'i' || *f_str->str == 'u' || *f_str->str == 'U')	
-		itodiutoa(f_str);
-	if (*f_str->str == 'o')
-		itootoa(f_str);
-	if (*f_str->str == 'x' || *f_str->str == 'X')
-		itoxa(f_str, ll);
-}
 */
-
 /* Never format string or argcs or ret */
 void format_fs(t_fs *f_str)
 {
@@ -881,15 +963,6 @@ void format_fs(t_fs *f_str)
 	f_str->percent_flag = 0;
 	f_str->nb_len = 0;
 }
-
-
-/*
-void left_adjusted_percent(t_fs *f_str)
-{
-	putchar_and_count('%', f_str);	
-	f_str->ret += print_spaces(f_str->width - 1);
-}
-*/
 	
 void right_adjusted_percent(t_fs *f_str)
 {
@@ -937,11 +1010,11 @@ void function_dispatcher(t_fs *f_str, char conversion)
 	
 	if (conversion == 'u' || conversion == 'U'
 		|| conversion == 'd' || conversion == 'i')
-		itodiutoa(f_str);
+		integer(f_str);
 	else if (conversion == 'o')
-		itootoa(f_str);
+		octal(f_str);
 	else if (conversion == 'X' || conversion == 'x')
-		get_itoxa_argument(f_str);
+		hexa(f_str, 0);
 	else if (conversion == '%')
 		put_percent(f_str);
 	else if (conversion == 's')

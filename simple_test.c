@@ -774,8 +774,10 @@ void test_unsigned()
 void where_is_leak()
 {
 	int res1, res2;
-	res1 = printf("|%*d|\n", INT_MAX, 4);
-	res2 = ft_printf("|%*d|\n", INT_MAX, 4);
+	
+	res1 = 0;
+	res1 = printf("|%*d|\n", UINT_MAX, 4);
+	res2 = ft_printf("|%*d|\n", UINT_MAX, 4);
 	printf("res1: %d res2: %d\n", res1, res2);
 }
 /* Anything excpet float with value 0 and precisionn zero prints no digits */
@@ -804,6 +806,6 @@ int main(void)
 //	test_ptr();
 //	test_minus();
 //	test_unsigned();
-	where_is_leak();
+//	where_is_leak();
 	return (0);
 }
