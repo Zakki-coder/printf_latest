@@ -6,7 +6,7 @@
 /*   By: jniemine <jniemine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/14 15:15:00 by jniemine          #+#    #+#             */
-/*   Updated: 2022/05/17 22:43:24 by jniemine         ###   ########.fr       */
+/*   Updated: 2022/05/18 11:57:29 by jniemine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,8 @@ typedef struct s_format_string
 	int			percent_flag;
 }				t_fs;
 
+void format_fs(t_fs *f_str);
+void put_percent(t_fs *f_str);
 unsigned long long cast_to_modifier_u(t_fs *f_str, unsigned long long ll);
 long long cast_to_modifier(t_fs *f_str, long long ll);
 int is_signed(char c);
@@ -61,7 +63,6 @@ void hexa_print(t_fs *f_str, unsigned long long ull);
 void right_adjusted_hexa(t_fs *fs, unsigned long long ull, int len);
 void put_hexa_prefix(t_fs *fs);
 void handle_width(t_fs *f_str, int len);
-void putchar_and_count(char c, t_fs *f_str);
 int str_reverse(char *s);
 int zero_case(t_fs *f_str, unsigned long long ull);
 unsigned long long convert_from_negativity(t_fs *f_str, long long ll);
@@ -77,7 +78,6 @@ void get_width(t_fs *f_str, const char *format);
 void get_precision(t_fs *f_str, const char *format);
 void get_precision(t_fs *f_str, const char *format);
 void function_dispatcher(t_fs *f_str, char conversion);
-//int is_flag(char c);
 void put_character(t_fs *f_str);
 void hexa(t_fs *f_str, long long nb);
 void put_pointer_address(t_fs *f_str);

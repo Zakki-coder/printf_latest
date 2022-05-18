@@ -6,7 +6,7 @@
 /*   By: jniemine <jniemine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/17 19:19:34 by jniemine          #+#    #+#             */
-/*   Updated: 2022/05/17 21:02:24 by jniemine         ###   ########.fr       */
+/*   Updated: 2022/05/18 11:17:57 by jniemine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ void	hexa_print(t_fs *f_str, unsigned long long ull)
 	ft_bzero(s, 100);
 	if (ull == 0)
 	{
-		putchar_and_count('0', f_str);
+		f_str->ret += write (1, "0", 1);
 		return ;
 	}
 	if (*f_str->str == 'X')

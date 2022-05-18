@@ -6,7 +6,7 @@
 /*   By: jniemine <jniemine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/17 22:03:25 by jniemine          #+#    #+#             */
-/*   Updated: 2022/05/17 22:57:38 by jniemine         ###   ########.fr       */
+/*   Updated: 2022/05/18 11:40:34 by jniemine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ unsigned long long	get_int_argument(t_fs *f_str)
 	}
 	else
 	{
-		ll = get_argument(f_str);
+		ll = get_argument_u(f_str);
 		if (*f_str->str == 'u')
 		{
 			if (f_str->flags & PLUS)

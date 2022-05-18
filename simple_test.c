@@ -29,12 +29,6 @@ void print_bit(long long n)
 	printf("\n");
 }
 
-void test_is_conversion()
-{
-	printf("Is_conversion should return 1 and returns: %d\n", is_conversion('X'));
-	printf("Is_conversion should return 0 and returns: %d\n", is_conversion('z'));
-}
-
 void how_convers()
 {
 	long long			ld;

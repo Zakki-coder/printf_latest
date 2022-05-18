@@ -11,11 +11,15 @@ SRC =	./ft_printf.c				\
 		./float_part_3.c			\
 		./get_format_utilities.c	\
 		./parser_part_1.c			\
+		./parser_part_2.c			\
 		./hexa.c					\
 		./hexa_part_2.c				\
 		./octal.c					\
 		./octal_part_2.c			\
 		./integer.c					\
+		./percent.c					\
+		./get_argument_utilities.c	\
+		./shared_utilities.c 		\
 		./libft/*.c					\
 
 OBJ =	./*.o

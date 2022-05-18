@@ -6,49 +6,29 @@
 /*   By: jniemine <jniemine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/09 17:51:33 by jniemine          #+#    #+#             */
-/*   Updated: 2022/05/17 22:59:42 by jniemine         ###   ########.fr       */
+/*   Updated: 2022/05/18 12:19:58 by jniemine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "includes/ft_printf.h"
+#include "ft_printf.h"
 
-int has_prefix(t_fs *f_str);
 
-int str_reverse(char *s)
-{
-	int len;
-	int i;
-	char temp[100];
 
-	bzero(temp, 100);
-	len = ft_strlen(s) - 1;
-	i = 0;
-	while (len >= 0)
-	{
-		temp[i] = s[len];
-		++i;
-		--len;
-	}
-	ft_putstr(temp);
-	return (ft_strlen(temp));
-}
-
+/*
 long long cast_to_modifier(t_fs *f_str, long long ll)
 {
 	int m;
 
 	m = f_str->modifier;
-	//Add calls for the rest of diouxX, modify print_di to take care of things
-	//Modifier decides casting, diouxX is just the format
 	if (m & LLONG)
-		return((long long)ll);//print_di(f_str, (long long)ll);
+		return((long long)ll);
 	else if (m & LONG)
-		return((long)ll);//print_di(f_str, (long)ll);
+		return((long)ll);
 	else if (m & SHORT)
-		return((short)ll);//print_di(f_str, (short)ll);
+		return((short)ll);
 	else if (m & CHAR)
-		return((char)ll);//print_di(f_str, (char)ll);
-	return((int)ll);//print_di(f_str, (int)ll);
+		return((char)ll);
+	return((int)ll);
 }
 
 unsigned long long cast_to_modifier_u(t_fs *f_str, unsigned long long ll)
@@ -57,16 +37,17 @@ unsigned long long cast_to_modifier_u(t_fs *f_str, unsigned long long ll)
 
 	m = f_str->modifier;
 	if (m & LLONG)
-		return((unsigned long long)ll);//print_di(f_str, (long long)ll);
+		return((unsigned long long)ll);
 	else if (m & LONG)
-		return((unsigned long)ll);//print_di(f_str, (long)ll);
+		return((unsigned long)ll);
 	else if (m & SHORT)
-		return((unsigned short)ll);//print_di(f_str, (short)ll);
+		return((unsigned short)ll);
 	else if (m & CHAR)
-		return((unsigned char)ll);//print_di(f_str, (char)ll);
-	return((unsigned int)ll);//print_di(f_str, (int)ll);
+		return((unsigned char)ll);
+	return((unsigned int)ll);
 }
-
+*/
+/*
 long long get_argument(t_fs *f_str)
 {
 	int m;
@@ -81,7 +62,9 @@ long long get_argument(t_fs *f_str)
 		arg = va_arg(f_str->argcs, int);
 	return (arg);
 }
+*/
 
+/*
 unsigned long long get_argument_u(t_fs *f_str)
 {
 	int m;
@@ -89,7 +72,7 @@ unsigned long long get_argument_u(t_fs *f_str)
 
 	m = f_str->modifier;
 	if (m & LDBL)
-		arg = va_arg(f_str->argcs, long double);//call get_ldbl, which gets the value How the original does it, is there SEGFAULT here?
+		arg = va_arg(f_str->argcs, long double);
 	else if (m & LLONG)
 		arg = va_arg(f_str->argcs, unsigned long long int);
 	else if (m & LONG)
@@ -98,26 +81,16 @@ unsigned long long get_argument_u(t_fs *f_str)
 		arg = va_arg(f_str->argcs, unsigned int);
 	return (arg);
 }
+*/
 
-unsigned long long print_spaces(int len)
-{
-	unsigned long long ret;
-
-	ret = 0;
-	while (len > 0)
-	{
-		ft_putchar(' ');
-		--len;
-		++ret;
-	}
-	return (ret);
-}
-
+/*
 void putchar_and_count(char c, t_fs *f_str)
 {
 	f_str->ret += write (1, &c, 1);
 }
+*/
 
+/*
 void putchar_n(char c, unsigned long long n, t_fs *f_str)
 {
 	int i;
@@ -129,6 +102,7 @@ void putchar_n(char c, unsigned long long n, t_fs *f_str)
 		++i;
 	}
 }
+*/
 
 /*
 void multi_percent_handler(t_fs *f_str, const char *conversion, const char *percent);
@@ -199,11 +173,13 @@ void get_flags(t_fs *f_str, char *fs)
 }
 */
 
+/*
 int is_conversion(char c)
 {
 	return (c == 'f' || c == 'c' || c == 's' || c == 'p' || c == 'd' || c == 'i'
 			|| c == 'o' || c == 'u' || c == 'x' || c == 'X');
 }
+*/
 
 /*
 int not_atoi(const char **s)
@@ -290,10 +266,13 @@ void get_precision(t_fs *f_str, const char *format)
 }
 */
 /* ll or hh doesnt need to be checked because l and h will catch those */
+
+/*
 int is_modifier(char c)
 {
 	return (c == 'U' || c == 'L' || c == 'l' || c == 'h');
 }
+*/
 
 /*
 void get_modifiers(t_fs *f_str, const char *format)
@@ -323,6 +302,7 @@ void get_modifiers(t_fs *f_str, const char *format)
 
 /* Handle width is used multiple places */
 
+/*
 void handle_width(t_fs *f_str, int len)
 {
 	int f;
@@ -340,18 +320,31 @@ void handle_width(t_fs *f_str, int len)
 	if ((!(f & MINUS)) && has_prefix(f_str) && f_str->precision == f_str->width)
 		++f_str->width;
 }
+*/
 
+/*
 int is_signed(char c)
 {
 	return (c == 'd' || c == 'i' || c == 'f');
 }
+*/
 
+/*
+int is_signed(char c)
+{
+	return (c == 'd' || c == 'i' || c == 'f');
+}
+*/
+
+/*
 int has_prefix(t_fs *f_str)
 {
 	int f;
+	char c;
 
+	c = *f_str->str;
 	f = f_str->flags;
-	if (is_signed(*f_str->str))
+	if (c == 'd' || c == 'i' || c == 'f')
 		return (f_str->neg || f & SPACE || f & PLUS);
 	else
 		return (0);
@@ -360,9 +353,11 @@ int has_prefix(t_fs *f_str)
 unsigned long long convert_from_negativity(t_fs *f_str, long long ll)
 {
 	unsigned long long ull;
+	char c;
 
+	c = *f_str->str;
 	ull = 0;
-	if (is_signed(*f_str->str) && ll < 0)
+	if ((c == 'd' || c == 'i' || c == 'f') && ll < 0)
 	{
 		f_str->neg = 1;
 		if (ll == -9223372036854775807 - 1)
@@ -374,7 +369,8 @@ unsigned long long convert_from_negativity(t_fs *f_str, long long ll)
 	ull = ll;
 	return (ull);
 }
-
+*/
+/*
 int zero_case(t_fs *f_str, unsigned long long ull)
 {
 	if (ull == 0 && f_str->is_precision && f_str->precision == 0)
@@ -417,6 +413,7 @@ void set_prefix(t_fs *f_str, char *out, unsigned int nb_len)
 	else
 		*(out + f_str->width - f_str->precision - 1) = prefix;
 }
+*/
 
 /* itodiutoa starts */
 /*
@@ -605,19 +602,6 @@ void itodiutoa(t_fs *f_str)
 /* itodiutoa ends */
 
 /* At the moment only used with octal */
-unsigned long long  print_zeroes(int len)
-{
-	unsigned long long ret;
-
-	ret = 0;
-	while (len > 0)
-	{
-		ft_putnbr(0);
-		--len;
-		++ret;
-	}
-	return (ret);
-}
 
 
 /* Octa Starts */
@@ -951,19 +935,8 @@ void itoxa(t_fs *f_str, long long nb)
 }
 */
 /* Never format string or argcs or ret */
-void format_fs(t_fs *f_str)
-{
-	f_str->flags = 0;
-	f_str->width = 0;
-	f_str->precision = 0;
-	f_str->is_precision = 0;
-	f_str->modifier = 0;
-	f_str->conversion = 0;
-	f_str->neg = 0;
-	f_str->percent_flag = 0;
-	f_str->nb_len = 0;
-}
-	
+
+/*
 void right_adjusted_percent(t_fs *f_str)
 {
 	char *percent;
@@ -1001,7 +974,9 @@ void put_percent(t_fs *f_str)
 		right_adjusted_percent(f_str);
 	++f_str->str;
 }
+*/
 
+/*
 void function_dispatcher(t_fs *f_str, char conversion)
 {
 	long double			ld;
@@ -1027,6 +1002,7 @@ void function_dispatcher(t_fs *f_str, char conversion)
 		float_to_ascii(f_str);
 	format_fs(f_str);
 }
+*/
 
 /*
 int is_flag(char c)
@@ -1042,6 +1018,66 @@ int is_correct_format_str(char c)
 			|| c == '%');
 }
 */
+
+unsigned long long print_spaces(int len)
+{
+	unsigned long long ret;
+
+	ret = 0;
+	while (len > 0)
+	{
+		ft_putchar(' ');
+		--len;
+		++ret;
+	}
+	return (ret);
+}
+
+unsigned long long  print_zeroes(int len)
+{
+	unsigned long long ret;
+
+	ret = 0;
+	while (len > 0)
+	{
+		ft_putnbr(0);
+		--len;
+		++ret;
+	}
+	return (ret);
+}
+
+void format_fs(t_fs *f_str)
+{
+	f_str->flags = 0;
+	f_str->width = 0;
+	f_str->precision = 0;
+	f_str->is_precision = 0;
+	f_str->modifier = 0;
+	f_str->conversion = 0;
+	f_str->neg = 0;
+	f_str->percent_flag = 0;
+	f_str->nb_len = 0;
+}
+
+int str_reverse(char *s)
+{
+	int len;
+	int i;
+	char temp[100];
+
+	bzero(temp, 100);
+	len = ft_strlen(s) - 1;
+	i = 0;
+	while (len >= 0)
+	{
+		temp[i] = s[len];
+		++i;
+		--len;
+	}
+	ft_putstr(temp);
+	return (ft_strlen(temp));
+}
 
 int	ft_printf(const char *str, ...)
 {
