@@ -6,7 +6,7 @@
 /*   By: jniemine <jniemine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/17 19:19:34 by jniemine          #+#    #+#             */
-/*   Updated: 2022/05/18 11:17:57 by jniemine         ###   ########.fr       */
+/*   Updated: 2022/05/18 13:05:19 by jniemine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,13 +100,13 @@ void	hexa(t_fs *f_str, long long nb)
 	int	width;
 	int	precision;
 
-	if (zero_case(f_str, nb))
-		return ;
 	if (*f_str->str != 'p')
 	{
 		nb = va_arg(f_str->argcs, long long);
 		nb = cast_to_modifier_u(f_str, nb);
 	}
+	if (zero_case(f_str, nb))
+		return ;
 	width = f_str->width;
 	len = hexa_len(f_str, convert_from_negativity(f_str, nb));
 	if (!f_str->is_precision)

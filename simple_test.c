@@ -197,8 +197,10 @@ void test_x()
 //	ft_printf("%-010lu\n", 4294967295);
 //	printf("|%#010.0x|\n", 1);
 //	ft_printf("|%#010.0x|\n", 1);
-	printf("%10lx\n", 0xffffffffffffffff);
-	ft_printf("%10lx\n", 0xffffffffffffffff);
+//	printf("%10lx\n", 0xffffffffffffffff);
+//	ft_printf("%10lx\n", 0xffffffffffffffff);
+	printf("%.0lx\n", 1);
+	ft_printf("%.0lx\n", 1);
 }
 
 void wtf(void)
@@ -758,11 +760,12 @@ void test_unsigned()
 	//ft_printf("%U\n", 4294967295);
 //	printf("%U\n", 4294967296);
 	//ft_printf("%U\n", 4294967296);
-	printf("@main_ftprintf: %###-#0000 33...12..#0+0d\n", 256);
-	ft_printf("@main_ftprintf: %###-#0000 33...12..#0+0d\n", 256);
-	printf("%-33.12.d\n", 256);
-	ft_printf("%-33.12.d\n", 256);
-
+//	printf("@main_ftprintf: %###-#0000 33...12..#0+0d\n", 256);
+//	ft_printf("@main_ftprintf: %###-#0000 33...12..#0+0d\n", 256);
+//	printf("%-33.12.d\n", 256);
+//	ft_printf("%-33.12.d\n", 256);
+	printf("%+7llu\n", 1);
+	ft_printf("%+7llu\n", 1);
 }
 
 void where_is_leak()
@@ -784,7 +787,7 @@ int main(void)
 //	test_get_modifiers();	
 //	how_convers();
 //	test_d_i();
-//	test_x();
+	test_x();
 //	wtf();
 //	test_octal_len();
 //	test_print_octal();

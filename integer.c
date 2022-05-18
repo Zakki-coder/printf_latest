@@ -6,7 +6,7 @@
 /*   By: jniemine <jniemine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/17 22:03:25 by jniemine          #+#    #+#             */
-/*   Updated: 2022/05/18 11:40:34 by jniemine         ###   ########.fr       */
+/*   Updated: 2022/05/18 12:58:01 by jniemine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,11 +51,6 @@ unsigned long long	get_int_argument(t_fs *f_str)
 	if (*f_str->str == 'u' || *f_str->str == 'U')
 	{
 		ull = get_argument_u(f_str);
-		ull = cast_to_modifier_u(f_str, ull);
-	}
-	else
-	{
-		ll = get_argument_u(f_str);
 		if (*f_str->str == 'u')
 		{
 			if (f_str->flags & PLUS)
@@ -63,6 +58,18 @@ unsigned long long	get_int_argument(t_fs *f_str)
 			if (f_str->flags & SPACE)
 				f_str->flags ^= SPACE;
 		}
+		ull = cast_to_modifier_u(f_str, ull);
+	}
+	else
+	{
+		ll = get_argument_u(f_str);
+//		if (*f_str->str == 'u')
+//		{
+//			if (f_str->flags & PLUS)
+//				f_str->flags ^= PLUS;
+//			if (f_str->flags & SPACE)
+//				f_str->flags ^= SPACE;
+//		}
 		ll = cast_to_modifier(f_str, ll);
 		ull = convert_from_negativity(f_str, ll);
 	}
